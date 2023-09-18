@@ -28,7 +28,7 @@ struct TimetableSettingView: View {
                 }
                 DisclosureGroup("曜日の設定") {
                     ForEach(0..<7) {dayNum in
-                        Toggle(weekDayStringArray[dayNum], isOn: $settingTimetable.weekDays[dayNum])
+                        Toggle(calendar.shortWeekdaySymbols[dayNum], isOn: $settingTimetable.weekDays[dayNum])
                     }
                 }
                 DisclosureGroup("時限の設定") {

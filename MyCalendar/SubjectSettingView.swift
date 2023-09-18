@@ -14,22 +14,16 @@ struct SubjectSettingView: View {
     @Binding var settingPlace: String
     @Binding var settingColorNum: Int
     @Binding var settingNoClass: Set<Date>
-    let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ja_JP")
-        formatter.dateStyle = .short
-        return formatter
-    }()
     let weekday: Int
     let period: Int
     var scheduleArray: [Date] {
         var arr: [Date] = []
-        let start = Calendar.current.startOfDay(for: timetableData.currentTimetable.startDate!)
-        let end = Calendar.current.startOfDay(for: timetableData.currentTimetable.endDate!)
-        let startWeekday = Calendar.current.component(.weekday, from: start)-1
-        var scheduleDate = Calendar.current.date(byAdding: .day, value: (weekday+7-startWeekday)%7-7, to: start)!
-        while Calendar.current.date(byAdding: .day, value: 7, to: scheduleDate)! <= end {
-            scheduleDate = Calendar.current.date(byAdding: .day, value: 7, to: scheduleDate)!
+        let start = calendar.startOfDay(for: timetableData.currentTimetable.startDate!)
+        let end = calendar.startOfDay(for: timetableData.currentTimetable.endDate!)
+        let startWeekday = calendar.component(.weekday, from: start)-1
+        var scheduleDate = calendar.date(byAdding: .day, value: (weekday+7-startWeekday)%7-7, to: start)!
+        while calendar.date(byAdding: .day, value: 7, to: scheduleDate)! <= end {
+            scheduleDate = calendar.date(byAdding: .day, value: 7, to: scheduleDate)!
             arr.append(scheduleDate)
         }
         return arr
@@ -52,7 +46,7 @@ struct SubjectSettingView: View {
                    let _ = timetableData.currentTimetable.endDate {
                     DisclosureGroup("休講日の設定") {
                         ForEach (scheduleArray, id:\.self) { date in
-                            Toggle(dateFormatter.string(from: date), isOn: Binding(
+                            Toggle(dateString(date: date), isOn: Binding(
                                 get: { self.settingNoClass.contains(date)},
                                 set: { newValue in
                                     if newValue {
@@ -65,7 +59,7 @@ struct SubjectSettingView: View {
                     }
                 }
             }
-            .navigationTitle(weekDayStringArray[weekday]+"曜"+String(period+1)+"限")
+            .navigationTitle(calendar.shortWeekdaySymbols[weekday]+"曜"+String(period+1)+"限")
         }
     }
 }

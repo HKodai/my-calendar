@@ -12,7 +12,6 @@ func dateString(date: Date?) -> String {
         let df = DateFormatter()
         df.locale = Locale(identifier: "ja_JP")
         df.dateStyle = .medium
-        df.timeStyle = .none
         return df.string(from: d)
     } else {
         return "未設定"

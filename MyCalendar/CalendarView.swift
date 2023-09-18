@@ -36,6 +36,13 @@ extension Calendar {
     }
 }
 
+// currentは怖い。後で検討
+var calendar: Calendar {
+    var cal = Calendar(identifier: .gregorian)
+    cal.locale = Locale(identifier: "ja_JP")
+    return cal
+}
+
 struct CalendarDate: Identifiable {
     let id = UUID()
     let date: Date?
@@ -43,20 +50,20 @@ struct CalendarDate: Identifiable {
 
 func createCalendarDates(_ date: Date) -> [CalendarDate] {
     var days = [CalendarDate]()
-    let startOfMonth = Calendar.current.startOfMonth(for: date)
-    let daysInMonth = Calendar.current.daysInMonth(for: date)
+    let startOfMonth = calendar.startOfMonth(for: date)
+    let daysInMonth = calendar.daysInMonth(for: date)
     guard let daysInMonth = daysInMonth,
           let startOfMonth = startOfMonth
     else {return []}
     for day in 0..<daysInMonth {
-        days.append(CalendarDate(date: Calendar.current.date(byAdding: .day, value: day, to: startOfMonth)))
+        days.append(CalendarDate(date: calendar.date(byAdding: .day, value: day, to: startOfMonth)))
     }
     guard let firstDay = days.first,
           let lastDay = days.last,
           let firstDate = firstDay.date,
           let lastDate = lastDay.date,
-          let firstDateWeekday = Calendar.current.weekday(for: firstDate),
-          let lastDateWeekday = Calendar.current.weekday(for: lastDate)
+          let firstDateWeekday = calendar.weekday(for: firstDate),
+          let lastDateWeekday = calendar.weekday(for: lastDate)
     else{return []}
     let firstWeekEmptyDays = firstDateWeekday - 1
     let lastWeekEmptyDays = 7 - lastDateWeekday
@@ -76,8 +83,8 @@ struct CalendarCellView: View {
     var body: some View {
         if let date = cellDate.date {
             ZStack {
-                let day = Calendar.current.day(for: date)!
-                if Calendar.current.isDate(date, inSameDayAs: today) {
+                let day = calendar.day(for: date)!
+                if calendar.isDate(date, inSameDayAs: today) {
                     Color(.green)
                 } else {
                     Color(.white)
@@ -94,7 +101,6 @@ struct CalendarCellView: View {
 }
 
 struct CalendarView: View {
-    let weekdays = Calendar.current.shortWeekdaySymbols
     let grids = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
     @State var showingMonth = Date()
     var calendarDates: [CalendarDate] {
@@ -102,6 +108,7 @@ struct CalendarView: View {
     }
     var showingMonthString: String {
         let df = DateFormatter()
+        df.locale = Locale(identifier: "ja_JP")
         df.dateFormat = "yyyy/MM"
         return df.string(from: showingMonth)
     }
@@ -110,7 +117,7 @@ struct CalendarView: View {
         NavigationStack {
             VStack {
                 LazyVGrid(columns: grids) {
-                    ForEach(weekdays, id: \.self) {weekday in
+                    ForEach(calendar.shortWeekdaySymbols, id: \.self) {weekday in
                         Text(weekday)
                     }
                 }
@@ -128,14 +135,14 @@ struct CalendarView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        showingMonth = Calendar.current.date(byAdding: .month, value: -1, to: showingMonth)!
+                        showingMonth = calendar.date(byAdding: .month, value: -1, to: showingMonth)!
                     }) {
                         Image(systemName: "arrowtriangle.left")
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        showingMonth = Calendar.current.date(byAdding: .month, value: 1, to: showingMonth)!
+                        showingMonth = calendar.date(byAdding: .month, value: 1, to: showingMonth)!
                     }) {
                         Image(systemName: "arrowtriangle.right")
                     }

@@ -50,8 +50,6 @@ class TimetableData: ObservableObject {
     }
 }
 
-let weekDayStringArray = ["日","月","火","水","木","金","土"]
-
 struct TimetableView: View {
     @EnvironmentObject var timetableData: TimetableData
     let dateFormatter = DateFormatter()
@@ -67,7 +65,7 @@ struct TimetableView: View {
                                 .padding(.horizontal)
                             ForEach(0..<7) { day in
                                 if timetableData.currentTimetable.weekDays[day] == true{
-                                    Text(weekDayStringArray[day])
+                                    Text(calendar.shortWeekdaySymbols[day])
                                         .font(.headline)
                                 }
                             }
