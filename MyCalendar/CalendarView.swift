@@ -34,6 +34,10 @@ extension Calendar {
         let comps = dateComponents([.weekday], from: date)
         return comps.weekday
     }
+    func days(from date1: Date, to date2: Date) -> Int {
+        let comps = dateComponents([.day], from: startOfDay(for: date1), to: startOfDay(for: date2))
+        return comps.day!
+    }
 }
 
 struct CalendarDate: Identifiable {

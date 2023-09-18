@@ -12,6 +12,7 @@ struct Subject: Codable {
     var teacher = ""
     var place = ""
     var colorNum = 0
+    var noClass: Set<Date> = []
 }
 
 let colorArray: [Color] = [.white, .blue, .green, .orange, .pink]
@@ -24,6 +25,7 @@ struct SubjectView: View {
     @State var teacher = ""
     @State var place = ""
     @State var colorNum = 0
+    @State var noClass: Set<Date> = []
     let day: Int
     let period: Int
     
@@ -33,6 +35,7 @@ struct SubjectView: View {
             teacher = subject.teacher
             place = subject.place
             colorNum = subject.colorNum
+            noClass = subject.noClass
             showingSheet.toggle()
         }) {
             ZStack {
@@ -53,10 +56,10 @@ struct SubjectView: View {
             }
         }
         .sheet(isPresented: $showingSheet, onDismiss: {
-            subject = Subject(title: self.title, teacher: self.teacher, place: self.place, colorNum: self.colorNum)
+            subject = Subject(title: self.title, teacher: self.teacher, place: self.place, colorNum: self.colorNum, noClass: self.noClass)
             timetableData.save()
         }){
-            SubjectSettingView(settingTitle: $title, settingTeacher: $teacher, settingPlace: $place, settingColorNum: $colorNum, day: self.day, period: self.period)
+            SubjectSettingView(settingTitle: $title, settingTeacher: $teacher, settingPlace: $place, settingColorNum: $colorNum, settingNoClass: $noClass, weekday: self.day, period: self.period)
         }
         .buttonStyle(.plain)
     }
