@@ -48,6 +48,23 @@ struct CalendarDate: Identifiable {
     let date: Date?
 }
 
+func isClassDate(array: [Timetable], date: Date) -> Bool {
+    let weekday = calendar.weekday(for: date)!-1
+    for timetable in array {
+        if let start = timetable.startDate,
+           let end = timetable.endDate {
+            if calendar.startOfDay(for: start) <= date && date <= end && timetable.weekDays[weekday] {
+                for period in 0..<timetable.showingPeriods {
+                    if !timetable.table[weekday][period].noClass.contains(date) {
+                        return true
+                    }
+                }
+            }
+        }
+    }
+    return false
+}
+
 func createCalendarDates(_ date: Date) -> [CalendarDate] {
     var days = [CalendarDate]()
     let startOfMonth = calendar.startOfMonth(for: date)
@@ -77,20 +94,26 @@ func createCalendarDates(_ date: Date) -> [CalendarDate] {
 }
 
 struct CalendarCellView: View {
+    @EnvironmentObject var timetableData: TimetableData
     let today = Date()
     let cellDate: CalendarDate
     
     var body: some View {
         if let date = cellDate.date {
             ZStack {
-                let day = calendar.day(for: date)!
-                if calendar.isDate(date, inSameDayAs: today) {
-                    Color(.green)
-                } else {
+                if isClassDate(array: timetableData.timetableArray, date: date) {
                     Color(.white)
+                } else {
+                    Color(red: 224/255, green: 197/255, blue: 200/255)
                 }
                 VStack {
-                    Text("\(day)")
+                    let day = calendar.day(for: date)!
+                    if calendar.isDate(date, inSameDayAs: today) {
+                        Text("\(day)")
+                            .foregroundColor(.blue)
+                    } else {
+                        Text("\(day)")
+                    }
                     Spacer()
                 }
             }
@@ -149,11 +172,5 @@ struct CalendarView: View {
                 }
             }
         }
-    }
-}
-
-struct CalendarView_Previews: PreviewProvider {
-    static var previews: some View {
-        CalendarView()
     }
 }
