@@ -43,11 +43,6 @@ var calendar: Calendar {
     return cal
 }
 
-struct CalendarDate: Identifiable {
-    let id = UUID()
-    let date: Date?
-}
-
 func isClassDate(array: [Timetable], date: Date) -> Bool {
     let weekday = calendar.weekday(for: date)!-1
     for timetable in array {
@@ -63,6 +58,18 @@ func isClassDate(array: [Timetable], date: Date) -> Bool {
         }
     }
     return false
+}
+
+struct EventCell {
+    let title = ""
+    let color = Color.clear
+    let length = 1
+}
+
+struct CalendarDate: Identifiable {
+    let id = UUID()
+    let date: Date?
+    var eventCells = [EventCell]()
 }
 
 func createCalendarDates(_ date: Date) -> [CalendarDate] {
@@ -135,7 +142,6 @@ struct CalendarView: View {
         df.dateFormat = "yyyy/MM"
         return df.string(from: showingMonth)
     }
-    
     var body: some View {
         NavigationStack {
             VStack {
@@ -145,10 +151,12 @@ struct CalendarView: View {
                     }
                 }
                 ScrollView {
+                    let rows = max(5, calendarDates.first!.eventCells.count+1)
+                    let height = CGFloat(rows*20)
                     LazyVGrid(columns: grids, spacing: 0) {
-                        ForEach(calendarDates) {calendarDate in
-                            CalendarCellView(cellDate: calendarDate)
-                                .frame(height: 100)
+                        ForEach(calendarDates) { date in
+                            CalendarCellView(cellDate: date)
+                                .frame(height: height)
                                 .border(.black)
                         }
                     }
