@@ -61,16 +61,24 @@ func isClassDate(array: [Timetable], date: Date) -> Bool {
     return false
 }
 
+enum CellStatus {
+    case start
+    case continuation
+    case unused
+}
+
 struct EventCell {
-    let title = ""
-    let color = Color.clear
-    let length = 1
+    var title = ""
+    var color = Color.clear
+    var length = 1
+    var status: CellStatus = .unused
+    
 }
 
 struct CalendarDate: Identifiable {
     let id = UUID()
     let date: Date?
-    var eventCells = [EventCell]()
+    var eventCells = [EventCell](repeating: EventCell(), count: 4)
 }
 
 struct CalendarCellView: View {
@@ -110,27 +118,24 @@ struct CalendarView: View {
     @State var showingMonth = Date()
     @State var calendarDates = [CalendarDate(date: Date())]
     @State var events: [EKEvent]?
-    func loadEvents() {
-        let calendars = eventStore.calendars(for: .event)
-        let predicate = eventStore.predicateForEvents(withStart: calendar.startOfMonth(for: showingMonth)!, end: calendar.startOfMonth(for: calendar.date(byAdding: .month, value: 1, to: showingMonth)!)!, calendars: calendars)
-        events = eventStore.events(matching: predicate)
+    var showingMonthString: String {
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "ja_JP")
+        df.dateFormat = "yyyy/MM"
+        return df.string(from: showingMonth)
     }
-    func authRequest() {
-        if EKEventStore.authorizationStatus(for: .event) == .notDetermined {
-            eventStore.requestAccess(to: .event, completion: {(granted, error) in
-                if granted {
-                    loadEvents()
-                }
-            })
-        }
-    }
-    func createCalendarDates(_ date: Date) {
+    func createCalendarDates() {
         var days = [CalendarDate]()
-        let startOfMonth = calendar.startOfMonth(for: date)!
-        let daysInMonth = calendar.daysInMonth(for: date)!
+        let startOfMonth = calendar.startOfMonth(for: showingMonth)!
+        let daysInMonth = calendar.daysInMonth(for: showingMonth)!
         for day in 0..<daysInMonth {
             days.append(CalendarDate(date: calendar.date(byAdding: .day, value: day, to: startOfMonth)))
         }
+        
+        let calendars = eventStore.calendars(for: .event)
+        let predicate = eventStore.predicateForEvents(withStart: calendar.startOfMonth(for: showingMonth)!, end: calendar.startOfMonth(for: calendar.date(byAdding: .month, value: 1, to: showingMonth)!)!, calendars: calendars)
+        events = eventStore.events(matching: predicate)
+        
         let firstDay = days.first!
         let lastDay = days.last!
         let firstDate = firstDay.date!
@@ -147,12 +152,16 @@ struct CalendarView: View {
         }
         calendarDates = days
     }
-    var showingMonthString: String {
-        let df = DateFormatter()
-        df.locale = Locale(identifier: "ja_JP")
-        df.dateFormat = "yyyy/MM"
-        return df.string(from: showingMonth)
+    func authRequest() {
+        if EKEventStore.authorizationStatus(for: .event) == .notDetermined {
+            eventStore.requestAccess(to: .event, completion: {(granted, error) in
+                if granted {
+                    createCalendarDates()
+                }
+            })
+        }
     }
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -162,7 +171,7 @@ struct CalendarView: View {
                     }
                 }
                 ScrollView {
-                    let rows = max(5, calendarDates.first!.eventCells.count+1)
+                    let rows = calendarDates.first!.eventCells.count+1
                     let height = CGFloat(rows*20)
                     LazyVGrid(columns: grids, spacing: 0) {
                         ForEach(calendarDates) { date in
@@ -182,15 +191,14 @@ struct CalendarView: View {
                 }
             }
             .onAppear{
-                createCalendarDates(showingMonth)
-                loadEvents()
+                createCalendarDates()
             }
             .navigationBarTitle(showingMonthString, displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         showingMonth = calendar.date(byAdding: .month, value: -1, to: showingMonth)!
-                        createCalendarDates(showingMonth)
+                        createCalendarDates()
                     }) {
                         Image(systemName: "arrowtriangle.left")
                     }
@@ -198,7 +206,7 @@ struct CalendarView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         showingMonth = calendar.date(byAdding: .month, value: 1, to: showingMonth)!
-                        createCalendarDates(showingMonth)
+                        createCalendarDates()
                     }) {
                         Image(systemName: "arrowtriangle.right")
                     }
