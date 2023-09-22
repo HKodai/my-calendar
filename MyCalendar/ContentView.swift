@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var selectedTag = 1
+    @State var selectedTag = 2
     var body: some View {
         TabView(selection: $selectedTag) {
             TimetableView()

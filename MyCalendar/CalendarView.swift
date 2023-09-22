@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import EventKit
 
 extension Calendar {
     func startOfMonth(for date: Date) -> Date? {
@@ -36,7 +37,6 @@ extension Calendar {
     }
 }
 
-// currentは怖い。後で検討
 var calendar: Calendar {
     var cal = Calendar(identifier: .gregorian)
     cal.locale = Locale(identifier: "ja_JP")
@@ -60,24 +60,20 @@ func isClassDate(array: [Timetable], date: Date) -> Bool {
     return false
 }
 
-enum CellStatus {
-    case start
-    case continuation
-    case unused
-}
-
-struct EventCell {
-    var title = ""
-    var color = Color.clear
-    var length = 1
-    var status: CellStatus = .unused
-    
+struct EventCellData {
+    let event: EKEvent
+    let length: Int
+    let isStartDay: Bool
 }
 
 struct CalendarDate: Identifiable {
     let id = UUID()
     let date: Date?
-    var eventCells = [EventCell](repeating: EventCell(), count: 4)
+    var eventCells: [EventCellData?]
+    init(date: Date?, cells: Int) {
+        self.date = date
+        eventCells = [EventCellData?](repeating: nil, count: cells)
+    }
 }
 
 struct CalendarCellView: View {
@@ -91,17 +87,7 @@ struct CalendarCellView: View {
                 if isClassDate(array: timetableData.timetableArray, date: date) {
                     Color(.white)
                 } else {
-                    Color(red: 224/255, green: 197/255, blue: 200/255)
-                }
-                VStack {
-                    let day = calendar.day(for: date)!
-                    if calendar.isDate(date, inSameDayAs: today) {
-                        Text("\(day)")
-                            .foregroundColor(.blue)
-                    } else {
-                        Text("\(day)")
-                    }
-                    Spacer()
+                    Color(red: 224/255.0, green: 197/255.0, blue: 200/255.0)
                 }
             }
         } else {
@@ -113,8 +99,10 @@ struct CalendarCellView: View {
 struct CalendarView: View {
     @EnvironmentObject var eventManager: EventManager
     let grids = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
+    let cellWidth = UIScreen.main.bounds.width/7.0
     @State var showingMonth = Date()
-    @State var calendarDates = [CalendarDate(date: Date())]
+    @State var cells = 4
+    @State var calendarDates = [CalendarDate]()
     var showingMonthString: String {
         let df = DateFormatter()
         df.locale = Locale(identifier: "ja_JP")
@@ -122,14 +110,47 @@ struct CalendarView: View {
         return df.string(from: showingMonth)
     }
     func createCalendarDates() {
-        var days = [CalendarDate]()
+        cells = 4
+        calendarDates = [CalendarDate]()
         let startOfMonth = calendar.startOfMonth(for: showingMonth)!
+        let startOfNextMonth = calendar.date(byAdding: .month, value: 1, to: startOfMonth)!
         let daysInMonth = calendar.daysInMonth(for: showingMonth)!
         for day in 0..<daysInMonth {
-            days.append(CalendarDate(date: calendar.date(byAdding: .day, value: day, to: startOfMonth)))
+            calendarDates.append(CalendarDate(date: calendar.date(byAdding: .day, value: day, to: startOfMonth), cells: cells))
         }
-        let firstDay = days.first!
-        let lastDay = days.last!
+        
+        if let events = eventManager.events {
+            for event in events {
+                let start = max(startOfMonth, event.startDate)
+                let end = calendar.date(byAdding: .second, value: -1, to: min(startOfNextMonth, event.endDate))!
+                let startDayNumber = calendar.component(.day, from: start)
+                let endDayNumber = max(startDayNumber, calendar.component(.day, from: end))
+                var cellNumber = 0
+                var assigned = false
+                for i in 0..<cells {
+                    if calendarDates[startDayNumber-1].eventCells[i] == nil {
+                        cellNumber = i
+                        assigned.toggle()
+                        break
+                    }
+                }
+                if !assigned {
+                    for i in 0..<daysInMonth {
+                        calendarDates[i].eventCells.append(nil)
+                    }
+                    cellNumber = cells
+                    cells += 1
+                }
+                let fullLength = endDayNumber-startDayNumber+1
+                for i in 0..<fullLength {
+                    let length = fullLength-i
+                    calendarDates[startDayNumber+i-1].eventCells[cellNumber] = EventCellData(event: event, length: length, isStartDay: i==0)
+                }
+            }
+        }
+        
+        let firstDay = calendarDates.first!
+        let lastDay = calendarDates.last!
         let firstDate = firstDay.date!
         let lastDate = lastDay.date!
         let firstDateWeekday = calendar.weekday(for: firstDate)!
@@ -137,40 +158,80 @@ struct CalendarView: View {
         let firstWeekEmptyDays = firstDateWeekday - 1
         let lastWeekEmptyDays = 7 - lastDateWeekday
         for _ in 0..<firstWeekEmptyDays {
-            days.insert(CalendarDate(date: nil), at: 0)
+            calendarDates.insert(CalendarDate(date: nil, cells: cells), at: 0)
         }
         for _ in 0..<lastWeekEmptyDays {
-            days.append(CalendarDate(date: nil))
+            calendarDates.append(CalendarDate(date: nil, cells: cells))
         }
-        calendarDates = days
     }
     
     var body: some View {
         NavigationStack {
             VStack {
-                LazyVGrid(columns: grids) {
-                    ForEach(calendar.shortWeekdaySymbols, id: \.self) {weekday in
-                        Text(weekday)
+                Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+                    GridRow {
+                        ForEach(calendar.shortWeekdaySymbols, id: \.self) { weekday in
+                            Text(weekday)
+                                .frame(width: cellWidth)
+                        }
                     }
                 }
                 ScrollView {
-                    let rows = calendarDates.first!.eventCells.count+1
-                    let height = CGFloat(rows*20)
-                    LazyVGrid(columns: grids, spacing: 0) {
-                        ForEach(calendarDates) { date in
-                            CalendarCellView(cellDate: date)
-                                .frame(height: height)
-                                .border(.black)
+                    let height = CGFloat((cells+1)*20)
+                    let weeks = calendarDates.count/7
+                    ZStack {
+                        Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+                            ForEach(0..<weeks, id: \.self) {week in
+                                GridRow {
+                                    ForEach(0..<7) {weekday in
+                                        let index = week*7+weekday
+                                        CalendarCellView(cellDate: calendarDates[index])
+                                            .frame(width: cellWidth, height: height)
+                                            .border(.black)
+                                    }
+                                }
+                            }
                         }
-                    }
-                    if let events = eventManager.events {
-                        ForEach (events, id: \.self) {event in
-                            Text("\(event.title)")
-                            Text("\(event.startDate)")
-                            Text("\(event.endDate)")
+                        Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+                            ForEach(0..<weeks, id: \.self) { week in
+                                GridRow {
+                                    ForEach(0..<7) {weekday in
+                                        let index = week*7+weekday
+                                        if let date = calendarDates[index].date {
+                                            let day = calendar.day(for: date)!
+                                            Text("\(day)")
+                                                .frame(width: cellWidth, height: 20)
+                                        } else {
+                                            Text("")
+                                                .frame(width: cellWidth, height: 20)
+                                        }
+                                    }
+                                }
+                                ForEach(0..<cells, id: \.self) { cellNumber in
+                                    GridRow {
+                                        ForEach(0..<7) {weekday in
+                                            let index = week*7+weekday
+                                            if let cellData = calendarDates[index].eventCells[cellNumber] {
+                                                if weekday == 0 || cellData.isStartDay {
+                                                    let columns = min(cellData.length, 7-weekday)
+                                                    let width = cellWidth*Double(columns)
+                                                    ZStack {
+                                                        Rectangle()
+                                                            .foregroundColor(.blue)
+                                                        Text("\(cellData.event.title)")
+                                                    }
+                                                    .frame(width: width, height: 20)
+                                                    .gridCellColumns(columns)
+                                                }
+                                            } else {
+                                                Text("")
+                                                    .frame(width: cellWidth, height: 20)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
-                    } else {
-                        Text(eventManager.statusMessage)
                     }
                 }
                 
@@ -183,9 +244,9 @@ struct CalendarView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         showingMonth = calendar.date(byAdding: .month, value: -1, to: showingMonth)!
-                        createCalendarDates()
                         eventManager.day = showingMonth
                         eventManager.fetchEvent()
+                        createCalendarDates()
                     }) {
                         Image(systemName: "arrowtriangle.left")
                     }
@@ -193,9 +254,9 @@ struct CalendarView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         showingMonth = calendar.date(byAdding: .month, value: 1, to: showingMonth)!
-                        createCalendarDates()
                         eventManager.day = showingMonth
                         eventManager.fetchEvent()
+                        createCalendarDates()
                     }) {
                         Image(systemName: "arrowtriangle.right")
                     }
