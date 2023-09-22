@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import EventKit
 
 extension Calendar {
     func startOfMonth(for date: Date) -> Date? {
@@ -111,13 +110,11 @@ struct CalendarCellView: View {
     }
 }
 
-let eventStore: EKEventStore = EKEventStore()
-
 struct CalendarView: View {
+    @EnvironmentObject var eventManager: EventManager
     let grids = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
     @State var showingMonth = Date()
     @State var calendarDates = [CalendarDate(date: Date())]
-    @State var events: [EKEvent]?
     var showingMonthString: String {
         let df = DateFormatter()
         df.locale = Locale(identifier: "ja_JP")
@@ -131,11 +128,6 @@ struct CalendarView: View {
         for day in 0..<daysInMonth {
             days.append(CalendarDate(date: calendar.date(byAdding: .day, value: day, to: startOfMonth)))
         }
-        
-        let calendars = eventStore.calendars(for: .event)
-        let predicate = eventStore.predicateForEvents(withStart: calendar.startOfMonth(for: showingMonth)!, end: calendar.startOfMonth(for: calendar.date(byAdding: .month, value: 1, to: showingMonth)!)!, calendars: calendars)
-        events = eventStore.events(matching: predicate)
-        
         let firstDay = days.first!
         let lastDay = days.last!
         let firstDate = firstDay.date!
@@ -151,15 +143,6 @@ struct CalendarView: View {
             days.append(CalendarDate(date: nil))
         }
         calendarDates = days
-    }
-    func authRequest() {
-        if EKEventStore.authorizationStatus(for: .event) == .notDetermined {
-            eventStore.requestAccess(to: .event, completion: {(granted, error) in
-                if granted {
-                    createCalendarDates()
-                }
-            })
-        }
     }
     
     var body: some View {
@@ -180,15 +163,17 @@ struct CalendarView: View {
                                 .border(.black)
                         }
                     }
-                }
-                if EKEventStore.authorizationStatus(for: .event) != .authorized {
-                    Button("許可") {
-                        authRequest()
+                    if let events = eventManager.events {
+                        ForEach (events, id: \.self) {event in
+                            Text("\(event.title)")
+                            Text("\(event.startDate)")
+                            Text("\(event.endDate)")
+                        }
+                    } else {
+                        Text(eventManager.statusMessage)
                     }
                 }
-                ForEach (events ?? [], id: \.self) {event in
-                    Text("\(event.title)")
-                }
+                
             }
             .onAppear{
                 createCalendarDates()
@@ -199,6 +184,8 @@ struct CalendarView: View {
                     Button(action: {
                         showingMonth = calendar.date(byAdding: .month, value: -1, to: showingMonth)!
                         createCalendarDates()
+                        eventManager.day = showingMonth
+                        eventManager.fetchEvent()
                     }) {
                         Image(systemName: "arrowtriangle.left")
                     }
@@ -207,6 +194,8 @@ struct CalendarView: View {
                     Button(action: {
                         showingMonth = calendar.date(byAdding: .month, value: 1, to: showingMonth)!
                         createCalendarDates()
+                        eventManager.day = showingMonth
+                        eventManager.fetchEvent()
                     }) {
                         Image(systemName: "arrowtriangle.right")
                     }
