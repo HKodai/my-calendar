@@ -13,7 +13,7 @@ struct MyCalendarApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(TimetableData())
-                .environmentObject(EventManager())
+                .environmentObject(CalendarManager())
         }
     }
 }

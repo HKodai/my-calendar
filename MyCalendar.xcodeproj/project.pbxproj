@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F65692E32ABD32DE00A8AA95 /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65692E22ABD32DE00A8AA95 /* EventManager.swift */; };
+		F65692E32ABD32DE00A8AA95 /* CalendarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65692E22ABD32DE00A8AA95 /* CalendarManager.swift */; };
 		F6670C042A943C8A005E6399 /* MyCalendarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C032A943C8A005E6399 /* MyCalendarApp.swift */; };
 		F6670C062A943C8A005E6399 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C052A943C8A005E6399 /* ContentView.swift */; };
 		F6670C082A943C8B005E6399 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6670C072A943C8B005E6399 /* Assets.xcassets */; };
@@ -25,7 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F65692E22ABD32DE00A8AA95 /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
+		F65692E22ABD32DE00A8AA95 /* CalendarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarManager.swift; sourceTree = "<group>"; };
 		F6670C002A943C8A005E6399 /* MyCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6670C032A943C8A005E6399 /* MyCalendarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCalendarApp.swift; sourceTree = "<group>"; };
 		F6670C052A943C8A005E6399 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -73,7 +73,7 @@
 		F6670C022A943C8A005E6399 /* MyCalendar */ = {
 			isa = PBXGroup;
 			children = (
-				F65692E22ABD32DE00A8AA95 /* EventManager.swift */,
+				F65692E22ABD32DE00A8AA95 /* CalendarManager.swift */,
 				F6670C032A943C8A005E6399 /* MyCalendarApp.swift */,
 				F6670C052A943C8A005E6399 /* ContentView.swift */,
 				F6670C072A943C8B005E6399 /* Assets.xcassets */,
@@ -182,7 +182,7 @@
 				F6670C142A9500E0005E6399 /* SubjectView.swift in Sources */,
 				F6B4E8622AAC137900620334 /* TimetableSelectView.swift in Sources */,
 				F6B4E8562AA9996D00620334 /* PeriodSettingView.swift in Sources */,
-				F65692E32ABD32DE00A8AA95 /* EventManager.swift in Sources */,
+				F65692E32ABD32DE00A8AA95 /* CalendarManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
