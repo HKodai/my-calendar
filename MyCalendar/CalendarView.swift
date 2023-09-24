@@ -159,7 +159,11 @@ struct CalendarView: View {
                         }
                     }
                 }
-                
+                VStack {
+                    ForEach(calendarManager.reminders ?? [], id: \.self) {reminder in
+                        Text("\(reminder.title)")
+                    }
+                }
             }
             .onAppear{
                 calendarManager.createCalendarDates()

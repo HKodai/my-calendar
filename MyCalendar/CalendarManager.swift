@@ -27,9 +27,16 @@ struct CalendarDate: Identifiable {
 class CalendarManager: ObservableObject {
     var store = EKEventStore()
     @Published var events: [EKEvent]? = nil
+    @Published var reminders: [EKReminder]? = nil
     @Published var showingMonth = Date()
     @Published var cells = 4
     @Published var calendarDates = [CalendarDate]()
+    var startOfMonth: Date {
+        calendar.startOfMonth(for: showingMonth)!
+    }
+    var startOfNextMonth: Date {
+        calendar.date(byAdding: .month, value: 1, to: startOfMonth)!
+    }
     
     init() {
         Task {
@@ -38,22 +45,45 @@ class CalendarManager: ObservableObject {
             } catch {
                 print(error.localizedDescription)
             }
+            do {
+                try await store.requestAccess(to: .reminder)
+            } catch {
+                print(error.localizedDescription)
+            }
             createCalendarDates()
             NotificationCenter.default.addObserver(self, selector:#selector(createCalendarDates) , name: .EKEventStoreChanged, object: store)
         }
     }
     
-    @objc func createCalendarDates() {
-        cells = 4
-        calendarDates = [CalendarDate]()
-        let startOfMonth = calendar.startOfMonth(for: showingMonth)!
-        let startOfNextMonth = calendar.date(byAdding: .month, value: 1, to: startOfMonth)!
+    func fetchEvents() {
+//        withStart <= 取得する範囲 < end
         let predicate = store.predicateForEvents(withStart: startOfMonth, end: startOfNextMonth, calendars: nil)
-        events = store.events(matching: predicate)
+        self.events = self.store.events(matching: predicate)
+    }
+    
+    func fetchReminder() {
+//        withDueDateStarting < 取得する範囲 <= ending
+        let start = calendar.date(byAdding: .second, value: -1, to: startOfMonth)
+        let end = calendar.date(byAdding: .second, value: -1, to: startOfNextMonth)
+        let predicate = store.predicateForIncompleteReminders(withDueDateStarting: start, ending: end, calendars: nil)
+        store.fetchReminders(matching: predicate) {reminder in
+            DispatchQueue.main.async {
+                self.reminders = reminder
+            }
+        }
+    }
+    
+    @objc func createCalendarDates() {
+        fetchEvents()
+        fetchReminder()
+        
+        self.cells = 4
+        self.calendarDates = [CalendarDate]()
         let daysInMonth = calendar.daysInMonth(for: showingMonth)!
         for day in 0..<daysInMonth {
             calendarDates.append(CalendarDate(date: calendar.date(byAdding: .day, value: day, to: startOfMonth), cells: cells))
         }
+        
         if let events = events {
             for event in events {
                 let start = max(startOfMonth, event.startDate)
