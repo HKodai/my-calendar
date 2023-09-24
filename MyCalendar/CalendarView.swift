@@ -136,18 +136,28 @@ struct CalendarView: View {
                                     GridRow {
                                         ForEach(0..<7) {weekday in
                                             let index = week*7+weekday
-                                            if let cellData = calendarManager.calendarDates[index].eventCells[cellNumber] {
-                                                if weekday == 0 || cellData.isStartDay {
-                                                    let columns = min(cellData.length, 7-weekday)
-                                                    let width = cellWidth*Double(columns)
-                                                    ZStack {
-                                                        Rectangle()
-                                                            .foregroundColor(.blue)
-                                                        Text("\(cellData.event.title)")
+                                            //                                            セルに何か入っている場合
+                                            if let cellData = calendarManager.calendarDates[index].eventReminderCells[cellNumber] {
+                                                //                                                中身がイベントの場合
+                                                if let event = cellData.event {
+                                                    if weekday == 0 || cellData.isStartDay {
+                                                        let columns = min(cellData.length, 7-weekday)
+                                                        let width = cellWidth*Double(columns)
+                                                        ZStack {
+                                                            Rectangle()
+                                                                .foregroundColor(.blue)
+                                                            Text("\(event.title)")
+                                                        }
+                                                        .frame(width: width, height: 20)
+                                                        .gridCellColumns(columns)
                                                     }
-                                                    .frame(width: width, height: 20)
-                                                    .gridCellColumns(columns)
                                                 }
+                                                //                                                中身がリマインダーの場合
+                                                if let reminder = cellData.reminder {
+                                                    Text("\(reminder.title)")
+                                                        .frame(width: cellWidth, height: 20)
+                                                }
+                                                //                                                セルが空の場合
                                             } else {
                                                 Text("")
                                                     .frame(width: cellWidth, height: 20)
@@ -157,11 +167,6 @@ struct CalendarView: View {
                                 }
                             }
                         }
-                    }
-                }
-                VStack {
-                    ForEach(calendarManager.reminders ?? [], id: \.self) {reminder in
-                        Text("\(reminder.title)")
                     }
                 }
             }
