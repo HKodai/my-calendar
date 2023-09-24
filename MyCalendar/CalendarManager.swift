@@ -26,7 +26,6 @@ struct CalendarDate: Identifiable {
 
 class CalendarManager: ObservableObject {
     var store = EKEventStore()
-    @Published var statusMessage = ""
     @Published var events: [EKEvent]? = nil
     @Published var showingMonth = Date()
     @Published var cells = 4
@@ -39,21 +38,8 @@ class CalendarManager: ObservableObject {
             } catch {
                 print(error.localizedDescription)
             }
-            let status = EKEventStore.authorizationStatus(for: .event)
-            switch status {
-            case .notDetermined:
-                statusMessage = "カレンダーへのアクセスする\n権限が選択されていません。"
-            case .restricted:
-                statusMessage = "カレンダーへのアクセスする\n権限がありません。"
-            case .denied:
-                statusMessage = "カレンダーへのアクセスが\n明示的に拒否されています。"
-            case.authorized:
-                statusMessage = "カレンダーへのアクセスが\n許可されています。"
-                createCalendarDates()
-                NotificationCenter.default.addObserver(self, selector:#selector(createCalendarDates) , name: .EKEventStoreChanged, object: store)
-            @unknown default:
-                statusMessage = "@unknown default"
-            }
+            createCalendarDates()
+            NotificationCenter.default.addObserver(self, selector:#selector(createCalendarDates) , name: .EKEventStoreChanged, object: store)
         }
     }
     
