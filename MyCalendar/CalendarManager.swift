@@ -28,7 +28,8 @@ struct CalendarDate {
 class CalendarManager: ObservableObject {
     var store = EKEventStore()
     @Published var events: [EKEvent]? = nil
-    @Published var reminders: [EKReminder]? = nil
+    @Published var monthReminders: [EKReminder]? = nil
+    @Published var allReminders: [EKReminder]? = nil
     
     @Published var cells = 4
     @Published var calendarDates = [CalendarDate]()
@@ -53,8 +54,8 @@ class CalendarManager: ObservableObject {
             } catch {
                 print(error.localizedDescription)
             }
-            createCalendarDates()
             NotificationCenter.default.addObserver(self, selector:#selector(createCalendarDates) , name: .EKEventStoreChanged, object: store)
+            NotificationCenter.default.addObserver(self, selector:#selector(fetchAllReminder) , name: .EKEventStoreChanged, object: store)
         }
     }
     
@@ -64,15 +65,24 @@ class CalendarManager: ObservableObject {
         self.events = self.store.events(matching: predicate)
     }
     
-    func fetchReminder(completion: @escaping () -> Void) {
+    func fetchMonthReminder(completion: @escaping () -> Void) {
         //        withDueDateStarting < 取得する範囲 <= ending
         let start = calendar.date(byAdding: .second, value: -1, to: startOfMonth)
         let end = calendar.date(byAdding: .second, value: -1, to: startOfNextMonth)
         let predicate = store.predicateForIncompleteReminders(withDueDateStarting: start, ending: end, calendars: nil)
         store.fetchReminders(matching: predicate) {reminder in
             DispatchQueue.main.async {
-                self.reminders = reminder
+                self.monthReminders = reminder
                 completion()
+            }
+        }
+    }
+    
+    @objc func fetchAllReminder() {
+        let predicate = store.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: nil)
+        store.fetchReminders(matching: predicate) {reminder in
+            DispatchQueue.main.async {
+                self.allReminders = reminder
             }
         }
     }
@@ -80,7 +90,7 @@ class CalendarManager: ObservableObject {
     @objc func createCalendarDates() {
         fetchEvents()
         //        fetchReminderの処理が完了してから次の処理を行う
-        fetchReminder {
+        fetchMonthReminder {
             //        calendarDatesを初期化
             self.cells = 4
             self.calendarDates = [CalendarDate]()
@@ -125,7 +135,7 @@ class CalendarManager: ObservableObject {
             }
             
             //        リマインダーの情報をセルに割り当てる
-            if let reminders = self.reminders {
+            if let reminders = self.monthReminders {
                 for reminder in reminders {
                     let dayNumber = reminder.dueDateComponents!.day!
                     var cellNumber = 0

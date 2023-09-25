@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct ToDoView: View {
+    @EnvironmentObject var calendarManager: CalendarManager
+    
     var body: some View {
-        Text("ToDo")
-    }
-}
-
-struct ToDoView_Previews: PreviewProvider {
-    static var previews: some View {
-        ToDoView()
+        VStack {
+            ForEach(calendarManager.allReminders ?? [], id: \.self) {reminder in
+                Text("\(reminder.title)")
+            }
+        }
+        .onAppear{
+            calendarManager.fetchAllReminder()
+        }
     }
 }
