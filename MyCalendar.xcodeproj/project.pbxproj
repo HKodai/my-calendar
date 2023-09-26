@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F65692E32ABD32DE00A8AA95 /* CalendarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65692E22ABD32DE00A8AA95 /* CalendarManager.swift */; };
+		F65DE6F32AC3038000287218 /* CreateReminderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65DE6F22AC3038000287218 /* CreateReminderView.swift */; };
 		F6670C042A943C8A005E6399 /* MyCalendarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C032A943C8A005E6399 /* MyCalendarApp.swift */; };
 		F6670C062A943C8A005E6399 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C052A943C8A005E6399 /* ContentView.swift */; };
 		F6670C082A943C8B005E6399 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6670C072A943C8B005E6399 /* Assets.xcassets */; };
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		F65692E22ABD32DE00A8AA95 /* CalendarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarManager.swift; sourceTree = "<group>"; };
+		F65DE6F22AC3038000287218 /* CreateReminderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateReminderView.swift; sourceTree = "<group>"; };
 		F6670C002A943C8A005E6399 /* MyCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6670C032A943C8A005E6399 /* MyCalendarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCalendarApp.swift; sourceTree = "<group>"; };
 		F6670C052A943C8A005E6399 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				F65692E22ABD32DE00A8AA95 /* CalendarManager.swift */,
+				F65DE6F22AC3038000287218 /* CreateReminderView.swift */,
 				F6670C032A943C8A005E6399 /* MyCalendarApp.swift */,
 				F6670C052A943C8A005E6399 /* ContentView.swift */,
 				F6670C072A943C8B005E6399 /* Assets.xcassets */,
@@ -172,6 +175,7 @@
 			files = (
 				F6670C062A943C8A005E6399 /* ContentView.swift in Sources */,
 				F6670C162A95CF9F005E6399 /* SubjectSettingView.swift in Sources */,
+				F65DE6F32AC3038000287218 /* CreateReminderView.swift in Sources */,
 				F6B4E8602AAC132F00620334 /* TimetableSettingView.swift in Sources */,
 				F6670C182A98708D005E6399 /* CalendarView.swift in Sources */,
 				F6670C122A9440C5005E6399 /* TimetableView.swift in Sources */,

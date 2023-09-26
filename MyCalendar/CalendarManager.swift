@@ -176,4 +176,20 @@ class CalendarManager: ObservableObject {
             }
         }
     }
+    
+    func createReminder(title: String, dueDate: Date?) {
+        let reminder = EKReminder(eventStore: store)
+        reminder.title = title
+        if let date = dueDate {
+            reminder.dueDateComponents = calendar.dateComponents([.calendar, .year, .month, .day, .hour, .minute], from: date)
+        } else {
+            reminder.dueDateComponents = nil
+        }
+        reminder.calendar = store.defaultCalendarForNewReminders()
+        do {
+            try store.save(reminder, commit: true)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
