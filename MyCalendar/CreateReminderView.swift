@@ -13,6 +13,7 @@ struct CreateReminderView: View {
     @State var title = ""
     @State var dueDate = Date()
     @State var hasDueDate = false
+    @State var isError = false
     
     var body: some View {
         NavigationStack {
@@ -26,12 +27,19 @@ struct CreateReminderView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("追加") {
-                        if hasDueDate {
-                            calendarManager.createReminder(title: title, dueDate: dueDate)
+                        if title == "" {
+                            isError.toggle()
                         } else {
-                            calendarManager.createReminder(title: title, dueDate: nil)
+                            if hasDueDate {
+                                calendarManager.createReminder(title: title, dueDate: dueDate)
+                            } else {
+                                calendarManager.createReminder(title: title, dueDate: nil)
+                            }
+                            dismiss()
                         }
-                        dismiss()
+                    }
+                    .alert(isPresented: $isError) {
+                        Alert(title: Text("タイトルを入力してください"), dismissButton: .default(Text("OK")))
                     }
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -42,11 +50,5 @@ struct CreateReminderView: View {
                 }
             }
         }
-    }
-}
-
-struct CreateReminderView_Previews: PreviewProvider {
-    static var previews: some View {
-        CreateReminderView()
     }
 }
