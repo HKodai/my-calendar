@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import EventKit
 
 struct CreateReminderView: View {
     @EnvironmentObject var calendarManager: CalendarManager
     @Environment(\.dismiss) var dismiss
+    @Binding var reminder: EKReminder?
     @State var title = ""
     @State var dueDate = Date()
     @State var hasDueDate = false
@@ -26,14 +28,22 @@ struct CreateReminderView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("追加") {
+                    Button(reminder == nil ? "追加" : "変更") {
                         if title == "" {
                             isError.toggle()
                         } else {
                             if hasDueDate {
-                                calendarManager.createReminder(title: title, dueDate: dueDate)
+                                if let reminder {
+                                    calendarManager.modifyReminder(reminder: reminder, title: title, dueDate: dueDate)
+                                } else {
+                                    calendarManager.createReminder(title: title, dueDate: dueDate)
+                                }
                             } else {
-                                calendarManager.createReminder(title: title, dueDate: nil)
+                                if let reminder {
+                                    calendarManager.modifyReminder(reminder: reminder, title: title, dueDate: nil)
+                                } else {
+                                    calendarManager.createReminder(title: title, dueDate: nil)
+                                }
                             }
                             dismiss()
                         }
@@ -47,6 +57,15 @@ struct CreateReminderView: View {
                         dismiss()
                     }
                     .buttonStyle(.borderless)
+                }
+            }
+        }
+        .task {
+            if let reminder {
+                self.title = reminder.title
+                if let comps = reminder.dueDateComponents {
+                    self.dueDate = comps.date!
+                    self.hasDueDate = true
                 }
             }
         }

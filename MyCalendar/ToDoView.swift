@@ -6,17 +6,23 @@
 //
 
 import SwiftUI
+import EventKit
 
 struct ToDoView: View {
     @EnvironmentObject var calendarManager: CalendarManager
     @State var isShowCreateReminderView = false
+    @State var reminder: EKReminder?
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             List(calendarManager.allReminders ?? [], id: \.self) {reminder in
-                Text("\(reminder.title)")
+                Button("\(reminder.title)") {
+                    self.reminder = reminder
+                    isShowCreateReminderView = true
+                }
             }
             Button(action: {
+                reminder = nil
                 isShowCreateReminderView.toggle()
             }, label: {
                 ZStack {
@@ -29,7 +35,7 @@ struct ToDoView: View {
             })
         }
         .sheet(isPresented: $isShowCreateReminderView) {
-            CreateReminderView()
+            CreateReminderView(reminder: $reminder)
         }
         .onAppear{
             calendarManager.fetchAllReminder()

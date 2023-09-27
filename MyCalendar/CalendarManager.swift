@@ -192,4 +192,19 @@ class CalendarManager: ObservableObject {
             print(error.localizedDescription)
         }
     }
+    
+    func modifyReminder(reminder: EKReminder, title: String, dueDate: Date?) {
+        reminder.title = title
+        if let date = dueDate {
+            reminder.dueDateComponents = calendar.dateComponents([.calendar, .year, .month, .day, .hour, .minute], from: date)
+        } else {
+            reminder.dueDateComponents = nil
+        }
+        reminder.calendar = store.defaultCalendarForNewReminders()
+        do {
+            try store.save(reminder, commit: true)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
