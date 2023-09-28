@@ -144,11 +144,12 @@ struct CalendarView: View {
                                                 if let event = cellData.event {
                                                     if weekday == 0 || cellData.isStartDay {
                                                         let columns = min(cellData.length, 7-weekday)
-                                                        let width = cellWidth*Double(columns)
+                                                        let width = cellWidth*Double(columns)-2
                                                         ZStack {
                                                             Rectangle()
                                                                 .foregroundColor(.blue)
                                                             Text("\(event.title)")
+                                                                .font(.system(size: 11))
                                                         }
                                                         .frame(width: width, height: 20)
                                                         .gridCellColumns(columns)
@@ -157,7 +158,8 @@ struct CalendarView: View {
                                                 //                                                中身がリマインダーの場合
                                                 if let reminder = cellData.reminder {
                                                     Text("\(reminder.title)")
-                                                        .frame(width: cellWidth, height: 20)
+                                                        .font(.system(size: 11))
+                                                        .frame(width: cellWidth-2, height: 20)
                                                 }
                                                 //                                                セルが空の場合
                                             } else {
