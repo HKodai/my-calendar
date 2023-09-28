@@ -44,18 +44,20 @@ var calendar: Calendar {
 
 func isClassDate(array: [Timetable], date: Date) -> Bool {
     let weekday = calendar.weekday(for: date)!-1
-//    for timetable in array {
-//        if let start = timetable.startDate,
-//           let end = timetable.endDate {
-//            if calendar.startOfDay(for: start) <= date && date <= end && timetable.weekDays[weekday] {
-//                for period in 0..<timetable.showingPeriods {
-//                    if !timetable.table[weekday][period].noClass.contains(date) {
-//                        return true
-//                    }
-//                }
-//            }
-//        }
-//    }
+    for timetable in array {
+        if let start = timetable.startDate,
+           let end = timetable.endDate {
+            if calendar.startOfDay(for: start) <= date && date <= end && timetable.weekDays[weekday] {
+                for period in 0..<timetable.showingPeriods {
+                    if let subject = timetable.table[weekday][period] {
+                        if !subject.noClass.contains(date) {
+                            return true
+                        }
+                    }
+                }
+            }
+        }
+    }
     return false
 }
 
