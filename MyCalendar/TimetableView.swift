@@ -19,7 +19,7 @@ struct Timetable: Codable {
     var weekDays: [Bool] = [false, true, true, true, true, true, false]
     var showingPeriods: Int = 5
     var periods: [Period] = Array(repeating: Period(startTime: DateComponents(), endTime: DateComponents()), count: 5)
-    var table: [[Subject]] = Array(repeating: Array(repeating: Subject(), count: 5), count: 7)
+    var table: [[Subject?]] = Array(repeating: Array(repeating: nil, count: 5), count: 7)
 }
 
 class TimetableData: ObservableObject {
@@ -57,7 +57,7 @@ struct TimetableView: View {
     var body: some View {
         NavigationStack {
             ZStack{
-                Color(.gray)
+                Color(.white)
                 ScrollView {
                     Grid(horizontalSpacing: 1, verticalSpacing: 1){
                         GridRow{

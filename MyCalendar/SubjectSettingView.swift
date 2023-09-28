@@ -9,11 +9,9 @@ import SwiftUI
 
 struct SubjectSettingView: View {
     @EnvironmentObject var timetableData: TimetableData
-    @Binding var settingTitle: String
-    @Binding var settingTeacher: String
-    @Binding var settingPlace: String
-    @Binding var settingColorNum: Int
-    @Binding var settingNoClass: Set<Date>
+    @Environment(\.dismiss) var dismiss
+    @Binding var subject: Subject?
+    @State var tempSubject = Subject()
     let weekday: Int
     let period: Int
     var scheduleArray: [Date] {
@@ -32,10 +30,10 @@ struct SubjectSettingView: View {
     var body: some View {
         NavigationView {
             Form {
-                TextField("科目", text: $settingTitle)
-                TextField("教員", text: $settingTeacher)
-                TextField("場所", text: $settingPlace)
-                Picker(selection: $settingColorNum, label: Text("背景色")) {
+                TextField("科目", text: $tempSubject.title)
+                TextField("教員", text: $tempSubject.teacher)
+                TextField("場所", text: $tempSubject.place)
+                Picker(selection: $tempSubject.colorNum, label: Text("背景色")) {
                     Text("白").tag(0)
                     Text("青").tag(1)
                     Text("緑").tag(2)
@@ -47,12 +45,12 @@ struct SubjectSettingView: View {
                     DisclosureGroup("休講日の設定") {
                         ForEach (scheduleArray, id:\.self) { date in
                             Toggle(dateString(date: date), isOn: Binding(
-                                get: { self.settingNoClass.contains(date)},
+                                get: { self.tempSubject.noClass.contains(date)},
                                 set: { newValue in
                                     if newValue {
-                                        self.settingNoClass.insert(date)
+                                        self.tempSubject.noClass.insert(date)
                                     } else {
-                                        self.settingNoClass.remove(date)
+                                        self.tempSubject.noClass.remove(date)
                                     }
                                 }))
                         }
@@ -60,6 +58,27 @@ struct SubjectSettingView: View {
                 }
             }
             .navigationTitle(calendar.shortWeekdaySymbols[weekday]+"曜"+String(period+1)+"限")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(subject == nil ? "追加" : "変更") {
+                        subject = tempSubject
+                        dismiss()
+                    }
+                }
+                if let _ = subject {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("削除") {
+                            subject = nil
+                            dismiss()
+                        }
+                    }
+                }
+            }
+        }
+        .onAppear {
+            if let subject = subject {
+                tempSubject = subject
+            }
         }
     }
 }
