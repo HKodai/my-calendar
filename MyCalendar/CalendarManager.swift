@@ -207,4 +207,12 @@ class CalendarManager: ObservableObject {
             print(error.localizedDescription)
         }
     }
+    
+    func deleteReminder(reminder: EKReminder) {
+        do {
+            try store.remove(reminder, commit: true)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }

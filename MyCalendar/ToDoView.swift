@@ -20,6 +20,13 @@ struct ToDoView: View {
                     self.reminder = reminder
                     isShowCreateReminderView = true
                 }
+                .contextMenu {
+                    Button(role: .destructive) {
+                        calendarManager.deleteReminder(reminder: reminder)
+                    } label: {
+                        Label("削除", systemImage: "trash")
+                    }
+                }
             }
             Button(action: {
                 reminder = nil
