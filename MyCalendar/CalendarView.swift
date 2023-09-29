@@ -146,7 +146,7 @@ struct CalendarView: View {
                                                         let columns = min(cellData.length, 7-weekday)
                                                         let width = cellWidth*Double(columns)-2
                                                         ZStack {
-                                                            Rectangle()
+                                                            RoundedRectangle(cornerRadius: 5)
                                                                 .foregroundColor(.blue)
                                                             Text("\(event.title)")
                                                                 .font(.system(size: 11))
