@@ -177,6 +177,39 @@ class CalendarManager: ObservableObject {
         }
     }
     
+    func createEvent(title: String, startDate: Date, endDate: Date) {
+        let event = EKEvent(eventStore: store)
+        event.title = title
+        event.startDate = startDate
+        event.endDate = endDate
+        event.calendar = store.defaultCalendarForNewEvents
+        do {
+            try store.save(event, span: .thisEvent, commit: true)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func modifyEvent(event: EKEvent, title: String, startDate: Date, endDate: Date) {
+        event.title = title
+        event.startDate = startDate
+        event.endDate = endDate
+        event.calendar = store.defaultCalendarForNewEvents
+        do {
+            try store.save(event, span: .thisEvent, commit: true)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func deleteEvent(event: EKEvent) {
+        do {
+            try store.remove(event, span: .thisEvent, commit: true)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
     func createReminder(title: String, dueDate: Date?) {
         let reminder = EKReminder(eventStore: store)
         reminder.title = title
