@@ -46,7 +46,11 @@ class CalendarManager: ObservableObject {
         Task {
             do {
                 if #available(iOS 17.0, *) {
-                    try await store.requestFullAccessToEvents()
+                    // おそらくここで黄色のエラーが出る
+                    store.requestFullAccessToEvents(completion: {granted, error in
+                        if granted {
+                            self.createCalendarDates()
+                        }})
                 }else {
                     try await store.requestAccess(to: .event)
                 }
@@ -70,7 +74,9 @@ class CalendarManager: ObservableObject {
     func fetchEvents() {
         //        withStart <= 取得する範囲 < end
         let predicate = store.predicateForEvents(withStart: startOfMonth, end: startOfNextMonth, calendars: nil)
-        self.events = self.store.events(matching: predicate)
+        DispatchQueue.main.async {
+            self.events = self.store.events(matching: predicate)
+        }
     }
     
     func fetchMonthReminder(completion: @escaping () -> Void) {
