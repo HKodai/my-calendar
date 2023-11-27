@@ -171,6 +171,21 @@ struct CalendarView: View {
                                 }
                             }
                         }
+                        Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+                            ForEach(0..<weeks, id: \.self) {week in
+                                GridRow {
+                                    ForEach(0..<7) {weekday in
+                                        let index = week*7+weekday
+                                        Button(action: {
+                                            print("\(index)")
+                                        }) {
+                                            Color.clear
+                                        }
+                                        .frame(width: cellWidth, height: height)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

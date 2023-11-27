@@ -45,12 +45,20 @@ class CalendarManager: ObservableObject {
     init() {
         Task {
             do {
-                try await store.requestAccess(to: .event)
+                if #available(iOS 17.0, *) {
+                    try await store.requestFullAccessToEvents()
+                }else {
+                    try await store.requestAccess(to: .event)
+                }
             } catch {
                 print(error.localizedDescription)
             }
             do {
-                try await store.requestAccess(to: .reminder)
+                if #available(iOS 17.0, *) {
+                    try await store.requestFullAccessToReminders()
+                }else {
+                    try await store.requestAccess(to: .reminder)
+                }
             } catch {
                 print(error.localizedDescription)
             }
