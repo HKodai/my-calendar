@@ -18,6 +18,7 @@
 		F6670C162A95CF9F005E6399 /* SubjectSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C152A95CF9F005E6399 /* SubjectSettingView.swift */; };
 		F6670C182A98708D005E6399 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C172A98708D005E6399 /* CalendarView.swift */; };
 		F6670C1A2A9870CA005E6399 /* ToDoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C192A9870CA005E6399 /* ToDoView.swift */; };
+		F67533B02B15801600B65F5E /* CreateEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67533AF2B15801600B65F5E /* CreateEventView.swift */; };
 		F6B4E8562AA9996D00620334 /* PeriodSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B4E8552AA9996D00620334 /* PeriodSettingView.swift */; };
 		F6B4E8582AA99A8700620334 /* DateSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B4E8572AA99A8700620334 /* DateSettingView.swift */; };
 		F6B4E85C2AAA8A0400620334 /* TimetableAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B4E85B2AAA8A0400620334 /* TimetableAddView.swift */; };
@@ -39,6 +40,7 @@
 		F6670C172A98708D005E6399 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		F6670C192A9870CA005E6399 /* ToDoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoView.swift; sourceTree = "<group>"; };
 		F67533AE2B14911E00B65F5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F67533AF2B15801600B65F5E /* CreateEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEventView.swift; sourceTree = SOURCE_ROOT; };
 		F6B4E8552AA9996D00620334 /* PeriodSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodSettingView.swift; sourceTree = "<group>"; };
 		F6B4E8572AA99A8700620334 /* DateSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSettingView.swift; sourceTree = "<group>"; };
 		F6B4E85B2AAA8A0400620334 /* TimetableAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableAddView.swift; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 		F6670C022A943C8A005E6399 /* MyCalendar */ = {
 			isa = PBXGroup;
 			children = (
+				F67533AF2B15801600B65F5E /* CreateEventView.swift */,
 				F67533AE2B14911E00B65F5E /* Info.plist */,
 				F65692E22ABD32DE00A8AA95 /* CalendarManager.swift */,
 				F65DE6F22AC3038000287218 /* CreateReminderView.swift */,
@@ -133,7 +136,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					F6670BFF2A943C8A005E6399 = {
 						CreatedOnToolsVersion = 14.3.1;
@@ -187,6 +190,7 @@
 				F6670C042A943C8A005E6399 /* MyCalendarApp.swift in Sources */,
 				F6670C142A9500E0005E6399 /* SubjectView.swift in Sources */,
 				F6B4E8622AAC137900620334 /* TimetableSelectView.swift in Sources */,
+				F67533B02B15801600B65F5E /* CreateEventView.swift in Sources */,
 				F6B4E8562AA9996D00620334 /* PeriodSettingView.swift in Sources */,
 				F65692E32ABD32DE00A8AA95 /* CalendarManager.swift in Sources */,
 			);
@@ -231,6 +235,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -291,6 +296,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
