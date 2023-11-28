@@ -33,7 +33,7 @@ struct SubjectSettingView: View {
                 TextField("科目", text: $tempSubject.title)
                 TextField("教員", text: $tempSubject.teacher)
                 TextField("場所", text: $tempSubject.place)
-                Picker(selection: $tempSubject.colorNum, label: Text("背景色")) {
+                Picker(selection: $tempSubject.colorNum, label: Text("色").foregroundStyle(Color(uiColor: UIColor.placeholderText))) {
                     Text("白").tag(0)
                     Text("青").tag(1)
                     Text("緑").tag(2)
@@ -54,6 +54,16 @@ struct SubjectSettingView: View {
                                     }
                                 }))
                         }
+                    }
+                }
+                ZStack(alignment: .topLeading) {
+                    TextEditor(text: $tempSubject.note)
+                        .padding(.horizontal, -4)
+                        .frame(minHeight: 200)
+                    if tempSubject.note.isEmpty {
+                        Text("メモ").foregroundStyle(Color(uiColor: UIColor.placeholderText))
+                            .padding(.vertical, 8)
+                            .allowsHitTesting(false)
                     }
                 }
             }

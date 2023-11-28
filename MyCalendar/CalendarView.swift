@@ -76,7 +76,7 @@ struct CalendarCellView: View {
                 }
             }
         } else {
-            Color(.gray)
+            Color(.gray).opacity(0.5)
         }
     }
 }

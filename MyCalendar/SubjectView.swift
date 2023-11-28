@@ -13,6 +13,7 @@ struct Subject: Codable {
     var place = ""
     var colorNum = 0
     var noClass: Set<Date> = []
+    var note = ""
 }
 
 let colorArray: [Color] = [.white, .blue, .green, .orange, .pink]
@@ -30,7 +31,7 @@ struct SubjectView: View {
         }) {
             ZStack {
                 if let subject = subject {
-                    colorArray[subject.colorNum]
+                    colorArray[subject.colorNum].opacity(0.5)
                     VStack{
                         Spacer()
                         Text(subject.title)
@@ -45,7 +46,7 @@ struct SubjectView: View {
                         Spacer()
                     }
                 } else {
-                    Color.gray
+                    Color.gray.opacity(0.5)
                 }
             }
         }
