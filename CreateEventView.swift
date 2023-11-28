@@ -15,6 +15,7 @@ struct CreateEventView: View {
     @State var title = ""
     @State var start = Date()
     @State var end = Date()
+    @State var colorCode = "CCCCCC"
     @State var isError = false
     
     var body: some View {
@@ -28,6 +29,15 @@ struct CreateEventView: View {
                             end = start
                         }
                     }
+                Picker(selection: $colorCode, label: Text("色")) {
+                    Text("灰").tag("CCCCCC")
+                    Text("青").tag("CCCCFF")
+                    Text("緑").tag("CCFFCC")
+                    Text("水").tag("CCFFFF")
+                    Text("赤").tag("FFCCCC")
+                    Text("桃").tag("FFCCFF")
+                    Text("黄").tag("FFFFCC")
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -35,7 +45,7 @@ struct CreateEventView: View {
                         if title == "" {
                             isError.toggle()
                         } else {
-                            calendarManager.createEvent(title: title, startDate: start, endDate: end)
+                            calendarManager.createEvent(title: title, startDate: start, endDate: end, colorCode: colorCode)
                             dismiss()
                         }
                     }

@@ -191,7 +191,7 @@ class CalendarManager: ObservableObject {
         }
     }
     
-    func createEvent(title: String, startDate: Date, endDate: Date) {
+    func createEvent(title: String, startDate: Date, endDate: Date, colorCode: String) {
         let event = EKEvent(eventStore: store)
         event.title = title
         event.startDate = startDate
@@ -199,6 +199,7 @@ class CalendarManager: ObservableObject {
         event.calendar = store.defaultCalendarForNewEvents
         do {
             try store.save(event, span: .thisEvent, commit: true)
+            UserDefaults.standard.set(colorCode, forKey: event.eventIdentifier)
         } catch {
             print(error.localizedDescription)
         }

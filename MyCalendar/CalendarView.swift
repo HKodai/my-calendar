@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import EventKit
 
 extension Calendar {
     func startOfMonth(for date: Date) -> Date? {
@@ -83,6 +84,8 @@ struct CalendarCellView: View {
 
 struct CalendarView: View {
     @EnvironmentObject var calendarManager: CalendarManager
+    @State var isShowCreateEventView = false
+    @State var event: EKEvent? = nil
     let grids = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
     let cellWidth = UIScreen.main.bounds.width/7.0
     var showingMonthString: String {
@@ -94,100 +97,119 @@ struct CalendarView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                Grid(horizontalSpacing: 0, verticalSpacing: 0) {
-                    GridRow {
-                        ForEach(calendar.shortWeekdaySymbols, id: \.self) { weekday in
-                            Text(weekday)
-                                .frame(width: cellWidth)
-                        }
-                    }
-                }
-                ScrollView {
-                    let height = CGFloat((calendarManager.cells+1)*20)
-                    let weeks = calendarManager.calendarDates.count/7
-                    ZStack {
-                        Grid(horizontalSpacing: 0, verticalSpacing: 0) {
-                            ForEach(0..<weeks, id: \.self) {week in
-                                GridRow {
-                                    ForEach(0..<7) {weekday in
-                                        let index = week*7+weekday
-                                        CalendarCellView(cellDate: calendarManager.calendarDates[index])
-                                            .frame(width: cellWidth, height: height)
-                                            .border(.black)
-                                    }
-                                }
+            ZStack(alignment: .bottomTrailing) {
+                VStack {
+                    Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+                        GridRow {
+                            ForEach(calendar.shortWeekdaySymbols, id: \.self) { weekday in
+                                Text(weekday)
+                                    .frame(width: cellWidth)
                             }
                         }
-                        Grid(horizontalSpacing: 0, verticalSpacing: 0) {
-                            ForEach(0..<weeks, id: \.self) { week in
-                                GridRow {
-                                    ForEach(0..<7) {weekday in
-                                        let index = week*7+weekday
-                                        if let date = calendarManager.calendarDates[index].date {
-                                            let day = calendar.day(for: date)!
-                                            Text("\(day)")
-                                                .frame(width: cellWidth, height: 20)
-                                        } else {
-                                            Text("")
-                                                .frame(width: cellWidth, height: 20)
-                                        }
-                                    }
-                                }
-                                ForEach(0..<calendarManager.cells, id: \.self) { cellNumber in
+                    }
+                    ScrollView {
+                        let height = CGFloat((calendarManager.cells+1)*20)
+                        let weeks = calendarManager.calendarDates.count/7
+                        ZStack {
+                            Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+                                ForEach(0..<weeks, id: \.self) {week in
                                     GridRow {
                                         ForEach(0..<7) {weekday in
                                             let index = week*7+weekday
-                                            //                                            セルに何か入っている場合
-                                            if let cellData = calendarManager.calendarDates[index].eventReminderCells[cellNumber] {
-                                                //                                                中身がイベントの場合
-                                                if let event = cellData.event {
-                                                    if weekday == 0 || cellData.isStartDay {
-                                                        let columns = min(cellData.length, 7-weekday)
-                                                        let width = cellWidth*Double(columns)-2
-                                                        ZStack {
-                                                            RoundedRectangle(cornerRadius: 5)
-                                                                .foregroundColor(.blue)
-                                                            Text("\(event.title)")
-                                                                .font(.system(size: 11))
-                                                        }
-                                                        .frame(width: width, height: 20)
-                                                        .gridCellColumns(columns)
-                                                    }
-                                                }
-                                                //                                                中身がリマインダーの場合
-                                                if let reminder = cellData.reminder {
-                                                    Text("\(reminder.title)")
-                                                        .font(.system(size: 11))
-                                                        .frame(width: cellWidth-2, height: 20)
-                                                }
-                                                //                                                セルが空の場合
+                                            CalendarCellView(cellDate: calendarManager.calendarDates[index])
+                                                .frame(width: cellWidth, height: height)
+                                                .border(.black)
+                                        }
+                                    }
+                                }
+                            }
+                            Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+                                ForEach(0..<weeks, id: \.self) { week in
+                                    GridRow {
+                                        ForEach(0..<7) {weekday in
+                                            let index = week*7+weekday
+                                            if let date = calendarManager.calendarDates[index].date {
+                                                let day = calendar.day(for: date)!
+                                                Text("\(day)")
+                                                    .frame(width: cellWidth, height: 20)
                                             } else {
                                                 Text("")
                                                     .frame(width: cellWidth, height: 20)
                                             }
                                         }
                                     }
+                                    ForEach(0..<calendarManager.cells, id: \.self) { cellNumber in
+                                        GridRow {
+                                            ForEach(0..<7) {weekday in
+                                                let index = week*7+weekday
+                                                //                                            セルに何か入っている場合
+                                                if let cellData = calendarManager.calendarDates[index].eventReminderCells[cellNumber] {
+                                                    //                                                中身がイベントの場合
+                                                    if let event = cellData.event {
+                                                        if weekday == 0 || cellData.isStartDay {
+                                                            let columns = min(cellData.length, 7-weekday)
+                                                            let width = cellWidth*Double(columns)-2
+                                                            ZStack {
+                                                                let colorCode = UserDefaults.standard.string(forKey: event.eventIdentifier) ?? "CCCCCC"
+                                                                let rgb = rgbDecode(code: colorCode)
+                                                                RoundedRectangle(cornerRadius: 5)
+                                                                    .foregroundColor(Color(red: rgb[0], green: rgb[1], blue: rgb[2]))
+                                                                Text("\(event.title)")
+                                                                    .font(.system(size: 11))
+                                                            }
+                                                            .frame(width: width, height: 20)
+                                                            .gridCellColumns(columns)
+                                                        }
+                                                    }
+                                                    //                                                中身がリマインダーの場合
+                                                    if let reminder = cellData.reminder {
+                                                        Text("\(reminder.title)")
+                                                            .font(.system(size: 11))
+                                                            .frame(width: cellWidth-2, height: 20)
+                                                    }
+                                                    //                                                セルが空の場合
+                                                } else {
+                                                    Text("")
+                                                        .frame(width: cellWidth, height: 20)
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
-                        Grid(horizontalSpacing: 0, verticalSpacing: 0) {
-                            ForEach(0..<weeks, id: \.self) {week in
-                                GridRow {
-                                    ForEach(0..<7) {weekday in
-                                        let index = week*7+weekday
-                                        Button(action: {
-                                            print("\(index)")
-                                        }) {
-                                            Color.clear
+                            Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+                                ForEach(0..<weeks, id: \.self) {week in
+                                    GridRow {
+                                        ForEach(0..<7) {weekday in
+                                            let index = week*7+weekday
+                                            Button(action: {
+                                                print("\(index)")
+                                            }) {
+                                                Color.clear
+                                            }
+                                            .frame(width: cellWidth, height: height)
                                         }
-                                        .frame(width: cellWidth, height: height)
                                     }
                                 }
                             }
                         }
+                        Spacer(minLength: 100)
                     }
                 }
+                Button(action: {
+                    isShowCreateEventView.toggle()
+                }, label: {
+                    ZStack {
+                        Circle()
+                            .frame(width: 50, height: 100)
+                        Image(systemName: "plus")
+                            .foregroundColor(.white)
+                    }
+                    .padding()
+                })
+            }
+            .sheet(isPresented: $isShowCreateEventView) {
+                CreateEventView(event: $event)
             }
             .onAppear{
                 calendarManager.createCalendarDates()

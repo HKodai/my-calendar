@@ -33,12 +33,14 @@ struct SubjectSettingView: View {
                 TextField("科目", text: $tempSubject.title)
                 TextField("教員", text: $tempSubject.teacher)
                 TextField("場所", text: $tempSubject.place)
-                Picker(selection: $tempSubject.colorNum, label: Text("色").foregroundStyle(Color(uiColor: UIColor.placeholderText))) {
-                    Text("白").tag(0)
-                    Text("青").tag(1)
-                    Text("緑").tag(2)
-                    Text("オレンジ").tag(3)
-                    Text("ピンク").tag(4)
+                Picker(selection: $tempSubject.colorCode, label: Text("色")) {
+                    Text("白").tag("FFFFFF")
+                    Text("青").tag("CCCCFF")
+                    Text("緑").tag("CCFFCC")
+                    Text("水").tag("CCFFFF")
+                    Text("赤").tag("FFCCCC")
+                    Text("桃").tag("FFCCFF")
+                    Text("黄").tag("FFFFCC")
                 }
                 if let _ = timetableData.currentTimetable.startDate,
                    let _ = timetableData.currentTimetable.endDate {
