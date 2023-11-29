@@ -27,20 +27,29 @@ struct SubjectSettingView: View {
         return arr
     }
     
+    let colors = ["FFFFFF", "CCCCFF", "CCFFCC", "CCFFFF", "FFCCCC", "FFCCFF", "FFFFCC"]
+    
     var body: some View {
         NavigationView {
             Form {
                 TextField("科目", text: $tempSubject.title)
                 TextField("教員", text: $tempSubject.teacher)
                 TextField("場所", text: $tempSubject.place)
-                Picker(selection: $tempSubject.colorCode, label: Text("色")) {
-                    Text("白").tag("FFFFFF")
-                    Text("青").tag("CCCCFF")
-                    Text("緑").tag("CCFFCC")
-                    Text("水").tag("CCFFFF")
-                    Text("赤").tag("FFCCCC")
-                    Text("桃").tag("FFCCFF")
-                    Text("黄").tag("FFFFCC")
+                HStack {
+                    ForEach(colors, id: \.self) {color in
+                        ZStack {
+                            let rgb = rgbDecode(code: color)
+                            Circle()
+                                .foregroundColor(Color(red: rgb[0], green: rgb[1], blue: rgb[2]))
+                                .frame(width: 36, height: 36)
+                                .padding(2)
+                            Circle()
+                                .stroke(tempSubject.colorCode == color ? Color.blue : Color.gray, lineWidth: 2)
+                                .frame(width: 38, height: 38)
+                        }.onTapGesture {
+                            tempSubject.colorCode = color
+                        }
+                    }
                 }
                 if let _ = timetableData.currentTimetable.startDate,
                    let _ = timetableData.currentTimetable.endDate {
