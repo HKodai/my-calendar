@@ -17,6 +17,7 @@ struct CreateEventView: View {
     @State var end = Date()
     @State var colorCode = "CCCCCC"
     @State var isError = false
+    let colors = ["CCCCCC", "CCCCFF", "CCFFCC", "CCFFFF", "FFCCCC", "FFCCFF", "FFFFCC"]
     
     var body: some View {
         NavigationStack {
@@ -29,15 +30,7 @@ struct CreateEventView: View {
                             end = start
                         }
                     }
-                Picker(selection: $colorCode, label: Text("色")) {
-                    Text("灰").tag("CCCCCC")
-                    Text("青").tag("CCCCFF")
-                    Text("緑").tag("CCFFCC")
-                    Text("水").tag("CCFFFF")
-                    Text("赤").tag("FFCCCC")
-                    Text("桃").tag("FFCCFF")
-                    Text("黄").tag("FFFFCC")
-                }
+                ColorSelectView(selectedColor: $colorCode, colors: colors, diameter: 36)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

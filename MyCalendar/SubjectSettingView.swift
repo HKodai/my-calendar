@@ -35,22 +35,7 @@ struct SubjectSettingView: View {
                 TextField("科目", text: $tempSubject.title)
                 TextField("教員", text: $tempSubject.teacher)
                 TextField("場所", text: $tempSubject.place)
-                HStack {
-                    ForEach(colors, id: \.self) {color in
-                        ZStack {
-                            let rgb = rgbDecode(code: color)
-                            Circle()
-                                .foregroundColor(Color(red: rgb[0], green: rgb[1], blue: rgb[2]))
-                                .frame(width: 36, height: 36)
-                                .padding(2)
-                            Circle()
-                                .stroke(tempSubject.colorCode == color ? Color.blue : Color.gray, lineWidth: 2)
-                                .frame(width: 38, height: 38)
-                        }.onTapGesture {
-                            tempSubject.colorCode = color
-                        }
-                    }
-                }
+                ColorSelectView(selectedColor: $tempSubject.colorCode, colors: colors, diameter: 36)
                 if let _ = timetableData.currentTimetable.startDate,
                    let _ = timetableData.currentTimetable.endDate {
                     DisclosureGroup("休講日の設定") {
