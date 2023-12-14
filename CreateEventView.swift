@@ -59,6 +59,7 @@ struct CreateEventView: View {
                 self.title = event.title
                 self.start = event.startDate
                 self.end = event.endDate
+                self.colorCode = UserDefaults.standard.string(forKey: event.eventIdentifier) ?? "CCCCCC"
             }
         }
     }

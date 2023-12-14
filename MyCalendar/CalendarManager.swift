@@ -225,7 +225,7 @@ class CalendarManager: ObservableObject {
         }
     }
     
-    func createReminder(title: String, dueDate: Date?) {
+    func createReminder(title: String, dueDate: Date?, colorCode: String) {
         let reminder = EKReminder(eventStore: store)
         reminder.title = title
         if let date = dueDate {
@@ -236,12 +236,13 @@ class CalendarManager: ObservableObject {
         reminder.calendar = store.defaultCalendarForNewReminders()
         do {
             try store.save(reminder, commit: true)
+            UserDefaults.standard.set(colorCode, forKey: reminder.calendarItemIdentifier)
         } catch {
             print(error.localizedDescription)
         }
     }
     
-    func modifyReminder(reminder: EKReminder, title: String, dueDate: Date?) {
+    func modifyReminder(reminder: EKReminder, title: String, dueDate: Date?, colorCode: String) {
         reminder.title = title
         if let date = dueDate {
             reminder.dueDateComponents = calendar.dateComponents([.calendar, .year, .month, .day, .hour, .minute], from: date)
@@ -251,6 +252,7 @@ class CalendarManager: ObservableObject {
         reminder.calendar = store.defaultCalendarForNewReminders()
         do {
             try store.save(reminder, commit: true)
+            UserDefaults.standard.set(colorCode, forKey: reminder.calendarItemIdentifier)
         } catch {
             print(error.localizedDescription)
         }

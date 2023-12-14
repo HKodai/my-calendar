@@ -15,7 +15,9 @@ struct CreateReminderView: View {
     @State var title = ""
     @State var dueDate = Date()
     @State var hasDueDate = false
+    @State var colorCode = "000000"
     @State var isError = false
+    let colors = ["000000", "0000FF", "00FF00", "00FFFF", "FF0000", "FF00FF", "FFFF00"]
     
     var body: some View {
         NavigationStack {
@@ -25,6 +27,7 @@ struct CreateReminderView: View {
                 if hasDueDate {
                     DatePicker("終了日", selection: $dueDate)
                 }
+                ColorSelectView(selectedColor: $colorCode, colors: colors, diameter: 36)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -34,17 +37,18 @@ struct CreateReminderView: View {
                         } else {
                             if hasDueDate {
                                 if let reminder {
-                                    calendarManager.modifyReminder(reminder: reminder, title: title, dueDate: dueDate)
+                                    calendarManager.modifyReminder(reminder: reminder, title: title, dueDate: dueDate, colorCode: colorCode)
                                 } else {
-                                    calendarManager.createReminder(title: title, dueDate: dueDate)
+                                    calendarManager.createReminder(title: title, dueDate: dueDate, colorCode: colorCode)
                                 }
                             } else {
                                 if let reminder {
-                                    calendarManager.modifyReminder(reminder: reminder, title: title, dueDate: nil)
+                                    calendarManager.modifyReminder(reminder: reminder, title: title, dueDate: nil, colorCode: colorCode)
                                 } else {
-                                    calendarManager.createReminder(title: title, dueDate: nil)
+                                    calendarManager.createReminder(title: title, dueDate: nil, colorCode: colorCode)
                                 }
                             }
+                            calendarManager.fetchAllReminder()
                             dismiss()
                         }
                     }
@@ -63,6 +67,7 @@ struct CreateReminderView: View {
         .task {
             if let reminder {
                 self.title = reminder.title
+                self.colorCode = UserDefaults.standard.string(forKey: reminder.calendarItemIdentifier) ?? "000000"
                 if let comps = reminder.dueDateComponents {
                     self.dueDate = comps.date!
                     self.hasDueDate = true

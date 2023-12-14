@@ -16,10 +16,14 @@ struct ToDoView: View {
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             List(calendarManager.allReminders ?? [], id: \.self) {reminder in
-                Button("\(reminder.title)") {
+                Button(action: {
                     self.reminder = reminder
                     isShowCreateReminderView = true
-                }
+                }, label: {
+                    let colorCode = UserDefaults.standard.string(forKey: reminder.calendarItemIdentifier) ?? "000000"
+                    let rgb = rgbDecode(code: colorCode)
+                    Text("\(reminder.title)").foregroundStyle(Color(red: rgb[0], green: rgb[1], blue: rgb[2]))
+                })
                 .contextMenu {
                     Button(role: .destructive) {
                         calendarManager.deleteReminder(reminder: reminder)
