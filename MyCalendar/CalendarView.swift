@@ -116,15 +116,25 @@ struct CalendarView: View {
                                     GridRow {
                                         ForEach(0..<7) {weekday in
                                             let index = week*7+weekday
-                                            CalendarCellView(cellDate: calendarManager.calendarDates[index])
-                                                .frame(width: cellWidth, height: height)
-                                                .border(.black)
+                                            let cellDate = calendarManager.calendarDates[index]
+                                            // 今日なら枠線を青くする
+                                            if cellDate.date != nil && calendar.isDate(cellDate.date!, inSameDayAs: Date()) {
+                                                CalendarCellView(cellDate: calendarManager.calendarDates[index])
+                                                    .frame(width: cellWidth, height: height)
+                                                    .border(.blue, width: 3)
+                                            } else {
+                                                CalendarCellView(cellDate: calendarManager.calendarDates[index])
+                                                    .frame(width: cellWidth, height: height)
+                                                    .border(.black)
+                                            }
                                         }
                                     }
                                 }
                             }
                             Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+                                // 週ごとに処理
                                 ForEach(0..<weeks, id: \.self) { week in
+                                    // 1行目に日付を表示
                                     GridRow {
                                         ForEach(0..<7) {weekday in
                                             let index = week*7+weekday
@@ -138,6 +148,7 @@ struct CalendarView: View {
                                             }
                                         }
                                     }
+                                    // イベントかリマインダーがあれば上から詰めて表示
                                     ForEach(0..<calendarManager.cells, id: \.self) { cellNumber in
                                         GridRow {
                                             ForEach(0..<7) {weekday in
