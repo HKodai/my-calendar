@@ -174,7 +174,10 @@ struct CalendarView: View {
                                                     }
                                                     //                                                中身がリマインダーの場合
                                                     if let reminder = cellData.reminder {
+                                                        let colorCode = UserDefaults.standard.string(forKey: reminder.calendarItemIdentifier) ?? "000000"
+                                                        let rgb = rgbDecode(code: colorCode)
                                                         Text("\(reminder.title)")
+                                                            .foregroundColor(Color(red: rgb[0], green: rgb[1], blue: rgb[2]))
                                                             .font(.system(size: 11))
                                                             .frame(width: cellWidth-2, height: 20)
                                                     }
