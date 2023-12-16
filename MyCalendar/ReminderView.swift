@@ -8,7 +8,7 @@
 import SwiftUI
 import EventKit
 
-struct ToDoView: View {
+struct ReminderView: View {
     @EnvironmentObject var calendarManager: CalendarManager
     @State var isShowCreateReminderView = false
     @State var reminder: EKReminder?

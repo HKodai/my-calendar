@@ -20,9 +20,9 @@ struct ContentView: View {
                 .tabItem{
                     Label("カレンダー", systemImage: "calendar")
                 }.tag(2)
-            ToDoView()
+            ReminderView()
                 .tabItem{
-                    Label("ToDo", systemImage: "list.clipboard")
+                    Label("リマインダー", systemImage: "list.clipboard")
                 }.tag(3)
         }
     }

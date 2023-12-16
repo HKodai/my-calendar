@@ -23,9 +23,9 @@ struct CreateReminderView: View {
         NavigationStack {
             List {
                 TextField("タイトル", text: $title)
-                Toggle("終了日を設定", isOn: $hasDueDate)
+                Toggle("日時を設定", isOn: $hasDueDate)
                 if hasDueDate {
-                    DatePicker("終了日", selection: $dueDate)
+                    DatePicker("", selection: $dueDate)
                 }
                 ColorSelectView(selectedColor: $colorCode, colors: colors, diameter: 36)
             }

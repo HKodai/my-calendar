@@ -17,7 +17,7 @@
 		F6670C142A9500E0005E6399 /* SubjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C132A9500E0005E6399 /* SubjectView.swift */; };
 		F6670C162A95CF9F005E6399 /* SubjectSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C152A95CF9F005E6399 /* SubjectSettingView.swift */; };
 		F6670C182A98708D005E6399 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C172A98708D005E6399 /* CalendarView.swift */; };
-		F6670C1A2A9870CA005E6399 /* ToDoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C192A9870CA005E6399 /* ToDoView.swift */; };
+		F6670C1A2A9870CA005E6399 /* ReminderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C192A9870CA005E6399 /* ReminderView.swift */; };
 		F67533B02B15801600B65F5E /* CreateEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67533AF2B15801600B65F5E /* CreateEventView.swift */; };
 		F67533B22B16DDAA00B65F5E /* ColorSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67533B12B16DDAA00B65F5E /* ColorSelectView.swift */; };
 		F6B4E8562AA9996D00620334 /* PeriodSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B4E8552AA9996D00620334 /* PeriodSettingView.swift */; };
@@ -39,7 +39,7 @@
 		F6670C132A9500E0005E6399 /* SubjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectView.swift; sourceTree = "<group>"; };
 		F6670C152A95CF9F005E6399 /* SubjectSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectSettingView.swift; sourceTree = "<group>"; };
 		F6670C172A98708D005E6399 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
-		F6670C192A9870CA005E6399 /* ToDoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoView.swift; sourceTree = "<group>"; };
+		F6670C192A9870CA005E6399 /* ReminderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderView.swift; sourceTree = "<group>"; };
 		F67533AE2B14911E00B65F5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F67533AF2B15801600B65F5E /* CreateEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEventView.swift; sourceTree = SOURCE_ROOT; };
 		F67533B12B16DDAA00B65F5E /* ColorSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectView.swift; sourceTree = SOURCE_ROOT; };
@@ -96,7 +96,7 @@
 				F6B4E8572AA99A8700620334 /* DateSettingView.swift */,
 				F6B4E8552AA9996D00620334 /* PeriodSettingView.swift */,
 				F6670C172A98708D005E6399 /* CalendarView.swift */,
-				F6670C192A9870CA005E6399 /* ToDoView.swift */,
+				F6670C192A9870CA005E6399 /* ReminderView.swift */,
 				F6B4E85F2AAC132F00620334 /* TimetableSettingView.swift */,
 				F6B4E8612AAC137900620334 /* TimetableSelectView.swift */,
 			);
@@ -187,7 +187,7 @@
 				F6B4E8602AAC132F00620334 /* TimetableSettingView.swift in Sources */,
 				F6670C182A98708D005E6399 /* CalendarView.swift in Sources */,
 				F6670C122A9440C5005E6399 /* TimetableView.swift in Sources */,
-				F6670C1A2A9870CA005E6399 /* ToDoView.swift in Sources */,
+				F6670C1A2A9870CA005E6399 /* ReminderView.swift in Sources */,
 				F6B4E8582AA99A8700620334 /* DateSettingView.swift in Sources */,
 				F6B4E85C2AAA8A0400620334 /* TimetableAddView.swift in Sources */,
 				F6670C042A943C8A005E6399 /* MyCalendarApp.swift in Sources */,
