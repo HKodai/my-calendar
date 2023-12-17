@@ -85,7 +85,9 @@ struct CalendarCellView: View {
 struct CalendarView: View {
     @EnvironmentObject var calendarManager: CalendarManager
     @State var isShowCreateEventView = false
+    @State var isShowScheduleView = false
     @State var event: EKEvent? = nil
+    @State var showingDate = Date()
     let grids = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
     let cellWidth = UIScreen.main.bounds.width/7.0
     var showingMonthString: String {
@@ -197,11 +199,17 @@ struct CalendarView: View {
                                         ForEach(0..<7) {weekday in
                                             let index = week*7+weekday
                                             Button(action: {
-                                                print("\(index)")
+                                                if let cellDate = calendarManager.calendarDates[index].date {
+                                                    showingDate = cellDate
+                                                    isShowScheduleView.toggle()
+                                                }
                                             }) {
                                                 Color.clear
                                             }
                                             .frame(width: cellWidth, height: height)
+                                            .sheet(isPresented: $isShowScheduleView, content: {
+                                                ScheduleView(date: $showingDate)
+                                            })
                                         }
                                     }
                                 }

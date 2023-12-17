@@ -25,6 +25,7 @@
 		F6B4E85C2AAA8A0400620334 /* TimetableAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B4E85B2AAA8A0400620334 /* TimetableAddView.swift */; };
 		F6B4E8602AAC132F00620334 /* TimetableSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B4E85F2AAC132F00620334 /* TimetableSettingView.swift */; };
 		F6B4E8622AAC137900620334 /* TimetableSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B4E8612AAC137900620334 /* TimetableSelectView.swift */; };
+		F6E165582B2E7F7A003B9173 /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E165572B2E7F7A003B9173 /* ScheduleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		F6B4E85B2AAA8A0400620334 /* TimetableAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableAddView.swift; sourceTree = "<group>"; };
 		F6B4E85F2AAC132F00620334 /* TimetableSettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimetableSettingView.swift; sourceTree = "<group>"; };
 		F6B4E8612AAC137900620334 /* TimetableSelectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimetableSelectView.swift; sourceTree = "<group>"; };
+		F6E165572B2E7F7A003B9173 /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 			children = (
 				F67533B12B16DDAA00B65F5E /* ColorSelectView.swift */,
 				F67533AF2B15801600B65F5E /* CreateEventView.swift */,
+				F6E165572B2E7F7A003B9173 /* ScheduleView.swift */,
 				F67533AE2B14911E00B65F5E /* Info.plist */,
 				F65692E22ABD32DE00A8AA95 /* CalendarManager.swift */,
 				F65DE6F22AC3038000287218 /* CreateReminderView.swift */,
@@ -188,6 +191,7 @@
 				F6670C182A98708D005E6399 /* CalendarView.swift in Sources */,
 				F6670C122A9440C5005E6399 /* TimetableView.swift in Sources */,
 				F6670C1A2A9870CA005E6399 /* ReminderView.swift in Sources */,
+				F6E165582B2E7F7A003B9173 /* ScheduleView.swift in Sources */,
 				F6B4E8582AA99A8700620334 /* DateSettingView.swift in Sources */,
 				F6B4E85C2AAA8A0400620334 /* TimetableAddView.swift in Sources */,
 				F6670C042A943C8A005E6399 /* MyCalendarApp.swift in Sources */,
