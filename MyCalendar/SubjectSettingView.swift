@@ -12,6 +12,7 @@ struct SubjectSettingView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var subject: Subject?
     @State var tempSubject = Subject()
+    @State var isToDelete = false
     let weekday: Int
     let period: Int
     var scheduleArray: [Date] {
@@ -74,8 +75,16 @@ struct SubjectSettingView: View {
                 if let _ = subject {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button("削除") {
-                            subject = nil
-                            dismiss()
+                            isToDelete = true
+                        }
+                        .foregroundStyle(.red)
+                        .alert("確認", isPresented: $isToDelete) {
+                            Button("削除", role: .destructive) {
+                                subject = nil
+                                dismiss()
+                            }
+                        } message: {
+                            Text("このコマを削除します")
                         }
                     }
                 }
