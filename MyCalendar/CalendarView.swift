@@ -73,11 +73,11 @@ struct CalendarCellView: View {
                 if isClassDate(array: timetableData.timetableArray, date: date) {
                     Color(.white)
                 } else {
-                    Color(red: 224/255.0, green: 197/255.0, blue: 200/255.0)
+                    Color(.systemPink).opacity(0.15)
                 }
             }
         } else {
-            Color(.gray).opacity(0.5)
+            Color(.gray).opacity(0.3)
         }
     }
 }
