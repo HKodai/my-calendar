@@ -19,6 +19,7 @@ struct ScheduleComponent {
     let comptype: ScheduleCompType
     let startDate: Date?
     let endDate: Date?
+    let colorCode: String?
 }
 
 func createScheduleArray(date: Date, timetableArray: [Timetable]) -> [ScheduleComponent] {
@@ -34,7 +35,6 @@ func createScheduleArray(date: Date, timetableArray: [Timetable]) -> [ScheduleCo
                     let endTime = timetable.periods[period].endTime
                     if let subject = timetable.table[weekday][period] {
                         if !subject.noClass.contains(date) {
-                            let title = subject.title
                             var startDate: Date? = nil
                             var endDate: Date? = nil
                             var startDateComps = calendar.dateComponents([.year, .month, .day], from: date)
@@ -51,7 +51,7 @@ func createScheduleArray(date: Date, timetableArray: [Timetable]) -> [ScheduleCo
                                 endDateComps.minute = endMinute
                                 endDate = calendar.date(from: endDateComps)
                             }
-                            arr.append(ScheduleComponent(title: title, comptype: .subject, startDate: startDate, endDate: endDate))
+                            arr.append(ScheduleComponent(title: subject.title, comptype: .subject, startDate: startDate, endDate: endDate, colorCode: subject.colorCode))
                         }
                     }
                 }

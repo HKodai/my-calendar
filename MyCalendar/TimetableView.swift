@@ -50,6 +50,14 @@ class TimetableData: ObservableObject {
     }
 }
 
+func timeFormat(comps: DateComponents) -> String {
+    if let hour = comps.hour,
+       let minute = comps.minute {
+        return String(hour)+":"+String(format: "%02d", minute)
+    }
+    return ""
+}
+
 struct TimetableView: View {
     @EnvironmentObject var timetableData: TimetableData
     let dateFormatter = DateFormatter()
@@ -74,19 +82,11 @@ struct TimetableView: View {
                             GridRow{
                                 VStack{
                                     let periodTime = timetableData.currentTimetable.periods[periodNum]
-                                    if let startHour = periodTime.startTime.hour,
-                                       let startMinute = periodTime.startTime.minute {
-                                        Text(String(startHour)+":"+String(format: "%02d",startMinute))
-                                            .font(.footnote)
-                                    }
+                                    Text(timeFormat(comps: periodTime.startTime))
                                     Text(String(periodNum+1))
                                         .font(.headline)
                                         .padding(.vertical, 1)
-                                    if let endHour = periodTime.endTime.hour,
-                                       let endMinute = periodTime.endTime.minute {
-                                        Text(String(endHour)+":"+String(format: "%02d", endMinute))
-                                            .font(.footnote)
-                                    }
+                                    Text(timeFormat(comps: periodTime.endTime))
                                 }
                                 ForEach(0..<7) { dayNum in
                                     if timetableData.currentTimetable.weekDays[dayNum] == true{
