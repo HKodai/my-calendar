@@ -26,6 +26,7 @@ struct CreateReminderView: View {
                 Toggle("日時を設定", isOn: $hasDueDate)
                 if hasDueDate {
                     DatePicker("", selection: $dueDate)
+                        .environment(\.locale, Locale(identifier: "ja_JP"))
                 }
                 ColorSelectView(selectedColor: $colorCode, colors: colors, diameter: 36)
             }

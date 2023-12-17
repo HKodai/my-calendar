@@ -24,12 +24,14 @@ struct CreateEventView: View {
             List {
                 TextField("タイトル", text: $title)
                 DatePicker("開始", selection: $start)
+                    .environment(\.locale, Locale(identifier: "ja_JP"))
                 DatePicker("終了", selection: $end, in: start...)
                     .onChange(of: start) { newValue in
                         if start > end {
                             end = start
                         }
                     }
+                    .environment(\.locale, Locale(identifier: "ja_JP"))
                 ColorSelectView(selectedColor: $colorCode, colors: colors, diameter: 36)
             }
             .toolbar {
