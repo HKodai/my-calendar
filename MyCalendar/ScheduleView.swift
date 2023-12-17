@@ -14,7 +14,8 @@ enum ScheduleCompType {
     case reminder
 }
 
-struct ScheduleComponent {
+struct ScheduleComponent: Identifiable {
+    var id = UUID()
     let title: String
     let comptype: ScheduleCompType
     let startDate: Date?
@@ -66,9 +67,17 @@ struct ScheduleView: View {
     @Binding var date: Date
     
     var body: some View {
-        Text("\(date)")
-        Button("ボタン", action: {
-            print(createScheduleArray(date: date, timetableArray: timetableData.timetableArray))
-        })
+        NavigationStack {
+            Text("\(date)")
+            ScrollView {
+                ForEach(createScheduleArray(date: date, timetableArray: timetableData.timetableArray)) { comp in
+                    if comp.comptype == .subject {
+                        NavigationLink(destination: TimetableView()) {
+                            SubjectComponentView(component: comp)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
