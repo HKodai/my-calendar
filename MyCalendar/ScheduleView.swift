@@ -23,7 +23,7 @@ struct ScheduleComponent: Identifiable {
     let colorCode: String?
 }
 
-func createScheduleArray(date: Date, timetableArray: [Timetable]) -> [ScheduleComponent] {
+func createScheduleArray(date: Date, timetableArray: [Timetable], eventArray: [EKEvent]) -> [ScheduleComponent] {
     var arr: [ScheduleComponent] = []
     // 時間割
     let weekday = calendar.weekday(for: date)!-1
@@ -59,22 +59,30 @@ func createScheduleArray(date: Date, timetableArray: [Timetable]) -> [ScheduleCo
             }
         }
     }
+    // イベント
+    for event in eventArray {
+        let colorCode = UserDefaults.standard.string(forKey: event.eventIdentifier) ?? "CCCCCC"
+        arr.append(ScheduleComponent(title: event.title, comptype: .event, startDate: event.startDate, endDate: event.endDate, colorCode: colorCode))
+    }
     return arr
 }
 
 struct ScheduleView: View {
     @EnvironmentObject var timetableData: TimetableData
+    @EnvironmentObject var calendarManager: CalendarManager
     @Binding var date: Date
     
     var body: some View {
         NavigationStack {
             Text("\(date)")
             ScrollView {
-                ForEach(createScheduleArray(date: date, timetableArray: timetableData.timetableArray)) { comp in
+                ForEach(createScheduleArray(date: date, timetableArray: timetableData.timetableArray, eventArray: calendarManager.dayEvents ?? [])) { comp in
                     if comp.comptype == .subject {
                         NavigationLink(destination: TimetableView()) {
                             SubjectComponentView(component: comp)
                         }
+                    } else if comp.comptype == .event {
+                        Text("\(comp.title)")
                     }
                 }
             }

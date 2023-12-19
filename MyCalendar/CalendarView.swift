@@ -200,7 +200,8 @@ struct CalendarView: View {
                                             let index = week*7+weekday
                                             Button(action: {
                                                 if let cellDate = calendarManager.calendarDates[index].date {
-                                                    showingDate = cellDate
+                                                    calendarManager.showingDate = cellDate
+                                                    calendarManager.fetchDayEvent()
                                                     isShowScheduleView.toggle()
                                                 }
                                             }) {
@@ -208,7 +209,7 @@ struct CalendarView: View {
                                             }
                                             .frame(width: cellWidth, height: height)
                                             .sheet(isPresented: $isShowScheduleView, content: {
-                                                ScheduleView(date: $showingDate)
+                                                ScheduleView(date: $calendarManager.showingDate)
                                             })
                                         }
                                     }

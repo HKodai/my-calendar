@@ -27,7 +27,8 @@ struct CalendarDate {
 
 class CalendarManager: ObservableObject {
     var store = EKEventStore()
-    @Published var events: [EKEvent]? = nil
+    @Published var monthEvents: [EKEvent]? = nil
+    @Published var dayEvents: [EKEvent]? = nil
     @Published var monthReminders: [EKReminder]? = nil
     @Published var allReminders: [EKReminder]? = nil
     
@@ -35,6 +36,7 @@ class CalendarManager: ObservableObject {
     @Published var calendarDates = [CalendarDate]()
     
     @Published var showingMonth = Date()
+    @Published var showingDate = Date()
     var startOfMonth: Date {
         calendar.startOfMonth(for: showingMonth)!
     }
@@ -67,16 +69,24 @@ class CalendarManager: ObservableObject {
                 print(error.localizedDescription)
             }
             NotificationCenter.default.addObserver(self, selector:#selector(createCalendarDates) , name: .EKEventStoreChanged, object: store)
+            NotificationCenter.default.addObserver(self, selector:#selector(fetchDayEvent) , name: .EKEventStoreChanged, object: store)
             NotificationCenter.default.addObserver(self, selector:#selector(fetchAllReminder) , name: .EKEventStoreChanged, object: store)
         }
     }
     
-    func fetchEvents() {
+    func fetchMonthEvent() {
         //        withStart <= 取得する範囲 < end
         let predicate = store.predicateForEvents(withStart: startOfMonth, end: startOfNextMonth, calendars: nil)
         DispatchQueue.main.async {
-            self.events = self.store.events(matching: predicate)
+            self.monthEvents = self.store.events(matching: predicate)
         }
+    }
+    
+    @objc func fetchDayEvent() {
+        let start = calendar.startOfDay(for: self.showingDate)
+        let end = calendar.date(bySettingHour: 23, minute: 59, second: 1, of: start)!
+        let predicate = store.predicateForEvents(withStart: start, end: end, calendars: nil)
+        self.dayEvents = store.events(matching: predicate)
     }
     
     func fetchMonthReminder(completion: @escaping () -> Void) {
@@ -102,7 +112,7 @@ class CalendarManager: ObservableObject {
     }
     
     @objc func createCalendarDates() {
-        fetchEvents()
+        fetchMonthEvent()
         //        fetchReminderの処理が完了してから次の処理を行う
         fetchMonthReminder {
             //        calendarDatesを初期化
@@ -114,7 +124,7 @@ class CalendarManager: ObservableObject {
             }
             
             //        イベントの情報をセルに割り当てる
-            if let events = self.events {
+            if let events = self.monthEvents {
                 for event in events {
                     let start = max(self.startOfMonth, event.startDate)
                     let end = calendar.date(byAdding: .second, value: -1, to: min(self.startOfNextMonth, event.endDate))!
