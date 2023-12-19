@@ -30,6 +30,7 @@ class CalendarManager: ObservableObject {
     @Published var monthEvents: [EKEvent]? = nil
     @Published var dayEvents: [EKEvent]? = nil
     @Published var monthReminders: [EKReminder]? = nil
+    @Published var dayReminders: [EKReminder]? = nil
     @Published var allReminders: [EKReminder]? = nil
     
     @Published var cells = 4
@@ -70,6 +71,7 @@ class CalendarManager: ObservableObject {
             }
             NotificationCenter.default.addObserver(self, selector:#selector(createCalendarDates) , name: .EKEventStoreChanged, object: store)
             NotificationCenter.default.addObserver(self, selector:#selector(fetchDayEvent) , name: .EKEventStoreChanged, object: store)
+            NotificationCenter.default.addObserver(self, selector:#selector(fetchDayReminder) , name: .EKEventStoreChanged, object: store)
             NotificationCenter.default.addObserver(self, selector:#selector(fetchAllReminder) , name: .EKEventStoreChanged, object: store)
         }
     }
@@ -83,7 +85,7 @@ class CalendarManager: ObservableObject {
     }
     
     @objc func fetchDayEvent() {
-        let start = calendar.startOfDay(for: self.showingDate)
+        let start = showingDate
         let end = calendar.date(bySettingHour: 23, minute: 59, second: 1, of: start)!
         let predicate = store.predicateForEvents(withStart: start, end: end, calendars: nil)
         self.dayEvents = store.events(matching: predicate)
@@ -98,6 +100,17 @@ class CalendarManager: ObservableObject {
             DispatchQueue.main.async {
                 self.monthReminders = reminder
                 completion()
+            }
+        }
+    }
+    
+    @objc func fetchDayReminder() {
+        let start = calendar.date(byAdding: .second, value: -1, to: showingDate)
+        let end = calendar.date(bySettingHour: 23, minute: 59, second: 0, of: showingDate)
+        let predicate = store.predicateForIncompleteReminders(withDueDateStarting: start, ending: end, calendars: nil)
+        store.fetchReminders(matching: predicate) {reminder in
+            DispatchQueue.main.async {
+                self.dayReminders = reminder
             }
         }
     }

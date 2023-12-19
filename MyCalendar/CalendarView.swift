@@ -202,6 +202,7 @@ struct CalendarView: View {
                                                 if let cellDate = calendarManager.calendarDates[index].date {
                                                     calendarManager.showingDate = cellDate
                                                     calendarManager.fetchDayEvent()
+                                                    calendarManager.fetchDayReminder()
                                                     isShowScheduleView.toggle()
                                                 }
                                             }) {

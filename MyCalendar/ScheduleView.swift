@@ -23,7 +23,7 @@ struct ScheduleComponent: Identifiable {
     let colorCode: String?
 }
 
-func createScheduleArray(date: Date, timetableArray: [Timetable], eventArray: [EKEvent]) -> [ScheduleComponent] {
+func createScheduleArray(date: Date, timetableArray: [Timetable], eventArray: [EKEvent], reminderArray: [EKReminder]) -> [ScheduleComponent] {
     var arr: [ScheduleComponent] = []
     // 時間割
     let weekday = calendar.weekday(for: date)!-1
@@ -64,6 +64,11 @@ func createScheduleArray(date: Date, timetableArray: [Timetable], eventArray: [E
         let colorCode = UserDefaults.standard.string(forKey: event.eventIdentifier) ?? "CCCCCC"
         arr.append(ScheduleComponent(title: event.title, comptype: .event, startDate: event.startDate, endDate: event.endDate, colorCode: colorCode))
     }
+    // リマインダー
+    for reminder in reminderArray {
+        let colorCode = UserDefaults.standard.string(forKey: reminder.calendarItemIdentifier) ?? "000000"
+        arr.append(ScheduleComponent(title: reminder.title, comptype: .reminder, startDate: reminder.completionDate, endDate: nil, colorCode: colorCode))
+    }
     return arr
 }
 
@@ -76,12 +81,14 @@ struct ScheduleView: View {
         NavigationStack {
             Text("\(date)")
             ScrollView {
-                ForEach(createScheduleArray(date: date, timetableArray: timetableData.timetableArray, eventArray: calendarManager.dayEvents ?? [])) { comp in
+                ForEach(createScheduleArray(date: date, timetableArray: timetableData.timetableArray, eventArray: calendarManager.dayEvents ?? [], reminderArray: calendarManager.dayReminders ?? [])) { comp in
                     if comp.comptype == .subject {
                         NavigationLink(destination: TimetableView()) {
                             SubjectComponentView(component: comp)
                         }
                     } else if comp.comptype == .event {
+                        Text("\(comp.title)")
+                    } else if comp.comptype == .reminder {
                         Text("\(comp.title)")
                     }
                 }
