@@ -99,7 +99,15 @@ struct ScheduleView: View {
                     }, label: {
                         SubjectEventComponentView(component: comp)
                     })
-                    
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            if let event = calendarManager.store.event(withIdentifier: comp.id!) {
+                                calendarManager.deleteEvent(event: event)
+                            }
+                        } label: {
+                            Label("削除", systemImage: "trash")
+                        }
+                    }
                 } else if comp.comptype == .reminder {
                     Button(action: {
                         let start = calendar.date(byAdding: .second, value: -1, to: date)
@@ -117,6 +125,23 @@ struct ScheduleView: View {
                     }, label: {
                         ReminderComponentView(component: comp)
                     })
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            let start = calendar.date(byAdding: .second, value: -1, to: date)
+                            let end = calendar.date(bySettingHour: 23, minute: 59, second: 0, of: date)
+                            let predicate = calendarManager.store.predicateForIncompleteReminders(withDueDateStarting: start, ending: end, calendars: nil)
+                            calendarManager.store.fetchReminders(matching: predicate) {reminders in
+                                for reminder in reminders ?? [] {
+                                    if reminder.calendarItemIdentifier == comp.id! {
+                                        calendarManager.deleteReminder(reminder: reminder)
+                                        break
+                                    }
+                                }
+                            }
+                        } label: {
+                            Label("削除", systemImage: "trash")
+                        }
+                    }
                 }
             }
         }
