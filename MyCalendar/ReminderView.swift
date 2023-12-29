@@ -46,7 +46,7 @@ struct ReminderView: View {
             })
         }
         .sheet(isPresented: $isShowCreateReminderView) {
-            CreateReminderView(reminder: $reminder)
+            CreateReminderView(reminder: reminder)
         }
         .onAppear{
             calendarManager.fetchAllReminder()

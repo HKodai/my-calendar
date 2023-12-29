@@ -14,8 +14,8 @@ enum ScheduleCompType {
     case reminder
 }
 
-struct ScheduleComponent: Identifiable {
-    var id = UUID()
+struct ScheduleComponent: Hashable {
+    let id: String?
     let title: String
     let comptype: ScheduleCompType
     let startDate: Date?
@@ -52,7 +52,7 @@ func createScheduleArray(date: Date, timetableArray: [Timetable], eventArray: [E
                                 endDateComps.minute = endMinute
                                 endDate = calendar.date(from: endDateComps)
                             }
-                            arr.append(ScheduleComponent(title: subject.title, comptype: .subject, startDate: startDate, endDate: endDate, colorCode: subject.colorCode))
+                            arr.append(ScheduleComponent(id: nil, title: subject.title, comptype: .subject, startDate: startDate, endDate: endDate, colorCode: subject.colorCode))
                         }
                     }
                 }
@@ -62,12 +62,12 @@ func createScheduleArray(date: Date, timetableArray: [Timetable], eventArray: [E
     // イベント
     for event in eventArray {
         let colorCode = UserDefaults.standard.string(forKey: event.eventIdentifier) ?? "CCCCCC"
-        arr.append(ScheduleComponent(title: event.title, comptype: .event, startDate: event.startDate, endDate: event.endDate, colorCode: colorCode))
+        arr.append(ScheduleComponent(id: event.eventIdentifier, title: event.title, comptype: .event, startDate: event.startDate, endDate: event.endDate, colorCode: colorCode))
     }
     // リマインダー
     for reminder in reminderArray {
         let colorCode = UserDefaults.standard.string(forKey: reminder.calendarItemIdentifier) ?? "000000"
-        arr.append(ScheduleComponent(title: reminder.title, comptype: .reminder, startDate: reminder.completionDate, endDate: nil, colorCode: colorCode))
+        arr.append(ScheduleComponent(id: reminder.calendarItemIdentifier, title: reminder.title, comptype: .reminder, startDate: reminder.completionDate, endDate: nil, colorCode: colorCode))
     }
     return arr
 }
@@ -76,23 +76,49 @@ struct ScheduleView: View {
     @EnvironmentObject var timetableData: TimetableData
     @EnvironmentObject var calendarManager: CalendarManager
     @Binding var date: Date
+    @State var isShowTimeteble = false
+    @State var isShowEvent = false
+    @State var isShowReminder = false
+    @State var event: EKEvent? = nil
+    @State var reminder: EKReminder? = nil
     
     var body: some View {
-        NavigationStack {
-            Text("\(date)")
-            ScrollView {
-                ForEach(createScheduleArray(date: date, timetableArray: timetableData.timetableArray, eventArray: calendarManager.dayEvents ?? [], reminderArray: calendarManager.dayReminders ?? [])) { comp in
-                    if comp.comptype == .subject {
-                        NavigationLink(destination: TimetableView()) {
-                            SubjectComponentView(component: comp)
+        Text("\(date)")
+        ScrollView {
+            ForEach(createScheduleArray(date: date, timetableArray: timetableData.timetableArray, eventArray: calendarManager.dayEvents ?? [], reminderArray: calendarManager.dayReminders ?? []), id: \.self) { comp in
+                if comp.comptype == .subject {
+                    Button(action: {
+                        isShowTimeteble.toggle()
+                    }, label: {
+                        SubjectComponentView(component: comp)
+                    })
+                } else if comp.comptype == .event {
+                    Text("\(comp.title)")
+                } else if comp.comptype == .reminder {
+                    Button(action: {
+                        let start = calendar.date(byAdding: .second, value: -1, to: date)
+                        let end = calendar.date(bySettingHour: 23, minute: 59, second: 0, of: date)
+                        let predicate = calendarManager.store.predicateForIncompleteReminders(withDueDateStarting: start, ending: end, calendars: nil)
+                        calendarManager.store.fetchReminders(matching: predicate) {reminders in
+                            for reminder in reminders ?? [] {
+                                if reminder.calendarItemIdentifier == comp.id! {
+                                    self.reminder = reminder
+                                    isShowReminder.toggle()
+                                    break
+                                }
+                            }
                         }
-                    } else if comp.comptype == .event {
+                    }, label: {
                         Text("\(comp.title)")
-                    } else if comp.comptype == .reminder {
-                        Text("\(comp.title)")
-                    }
+                    })
                 }
             }
+        }
+        .sheet(isPresented: $isShowTimeteble) {
+            TimetableView()
+        }
+        .sheet(isPresented: $isShowReminder) {
+            CreateReminderView(reminder: reminder)
         }
     }
 }

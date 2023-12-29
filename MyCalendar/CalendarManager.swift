@@ -91,6 +91,10 @@ class CalendarManager: ObservableObject {
         self.dayEvents = store.events(matching: predicate)
     }
     
+    func searchEvent(id: String) -> EKEvent? {
+        return store.event(withIdentifier: id)
+    }
+    
     func fetchMonthReminder(completion: @escaping () -> Void) {
         //        withDueDateStarting < 取得する範囲 <= ending
         let start = calendar.date(byAdding: .second, value: -1, to: startOfMonth)
