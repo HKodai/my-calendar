@@ -11,7 +11,7 @@ import EventKit
 struct CreateReminderView: View {
     @EnvironmentObject var calendarManager: CalendarManager
     @Environment(\.dismiss) var dismiss
-    @State var reminder: EKReminder?
+    @Binding var reminder: EKReminder?
     @State var title = ""
     @State var dueDate = Date()
     @State var hasDueDate = false

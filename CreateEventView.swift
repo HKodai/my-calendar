@@ -40,7 +40,11 @@ struct CreateEventView: View {
                         if title == "" {
                             isError.toggle()
                         } else {
-                            calendarManager.createEvent(title: title, startDate: start, endDate: end, colorCode: colorCode)
+                            if let event {
+                                calendarManager.modifyEvent(event: event, title: title, startDate: start, endDate: end)
+                            } else {
+                                calendarManager.createEvent(title: title, startDate: start, endDate: end, colorCode: colorCode)
+                            }
                             dismiss()
                         }
                     }

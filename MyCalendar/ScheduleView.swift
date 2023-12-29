@@ -93,7 +93,13 @@ struct ScheduleView: View {
                         SubjectComponentView(component: comp)
                     })
                 } else if comp.comptype == .event {
-                    Text("\(comp.title)")
+                    Button(action: {
+                        event = calendarManager.store.event(withIdentifier: comp.id!)
+                        isShowEvent.toggle()
+                    }, label: {
+                        Text("\(comp.title)")
+                    })
+                    
                 } else if comp.comptype == .reminder {
                     Button(action: {
                         let start = calendar.date(byAdding: .second, value: -1, to: date)
@@ -117,8 +123,11 @@ struct ScheduleView: View {
         .sheet(isPresented: $isShowTimeteble) {
             TimetableView()
         }
+        .sheet(isPresented: $isShowEvent) {
+            CreateEventView(event: $event)
+        }
         .sheet(isPresented: $isShowReminder) {
-            CreateReminderView(reminder: reminder)
+            CreateReminderView(reminder: $reminder)
         }
     }
 }
