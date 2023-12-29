@@ -15,8 +15,8 @@ struct SubjectEventComponentView: View {
             let rgb = rgbDecode(code: component.colorCode!)
             RoundedRectangle(cornerRadius: 10)
                 .fill(Color(red: rgb[0], green: rgb[1], blue: rgb[2]))
-                .frame(height: 75)
-                .padding()
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.black, lineWidth: 2)
             VStack {
                 HStack {
                     if let start = component.startDate {
@@ -31,6 +31,9 @@ struct SubjectEventComponentView: View {
                 }
                 Text("\(component.title)")
             }
+            .foregroundStyle(.black)
         }
+        .frame(height: 75)
+        .padding([.top, .leading, .trailing])
     }
 }

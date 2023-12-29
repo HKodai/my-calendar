@@ -27,7 +27,7 @@
 		F6B4E8602AAC132F00620334 /* TimetableSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B4E85F2AAC132F00620334 /* TimetableSettingView.swift */; };
 		F6B4E8622AAC137900620334 /* TimetableSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B4E8612AAC137900620334 /* TimetableSelectView.swift */; };
 		F6E165582B2E7F7A003B9173 /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E165572B2E7F7A003B9173 /* ScheduleView.swift */; };
-		F6E1655A2B2EF0C5003B9173 /* SubjectComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E165592B2EF0C5003B9173 /* SubjectComponentView.swift */; };
+		F6E1655A2B2EF0C5003B9173 /* SubjectEventComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E165592B2EF0C5003B9173 /* SubjectEventComponentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,7 +53,7 @@
 		F6B4E85F2AAC132F00620334 /* TimetableSettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimetableSettingView.swift; sourceTree = "<group>"; };
 		F6B4E8612AAC137900620334 /* TimetableSelectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimetableSelectView.swift; sourceTree = "<group>"; };
 		F6E165572B2E7F7A003B9173 /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
-		F6E165592B2EF0C5003B9173 /* SubjectComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectComponentView.swift; sourceTree = "<group>"; };
+		F6E165592B2EF0C5003B9173 /* SubjectEventComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectEventComponentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,7 +89,7 @@
 				F67533B12B16DDAA00B65F5E /* ColorSelectView.swift */,
 				F67533AF2B15801600B65F5E /* CreateEventView.swift */,
 				F6E165572B2E7F7A003B9173 /* ScheduleView.swift */,
-				F6E165592B2EF0C5003B9173 /* SubjectComponentView.swift */,
+				F6E165592B2EF0C5003B9173 /* SubjectEventComponentView.swift */,
 				F6735BB52B3E645000042703 /* ReminderComponentView.swift */,
 				F67533AE2B14911E00B65F5E /* Info.plist */,
 				F65692E22ABD32DE00A8AA95 /* CalendarManager.swift */,
@@ -206,7 +206,7 @@
 				F6B4E8622AAC137900620334 /* TimetableSelectView.swift in Sources */,
 				F6735BB62B3E645000042703 /* ReminderComponentView.swift in Sources */,
 				F67533B02B15801600B65F5E /* CreateEventView.swift in Sources */,
-				F6E1655A2B2EF0C5003B9173 /* SubjectComponentView.swift in Sources */,
+				F6E1655A2B2EF0C5003B9173 /* SubjectEventComponentView.swift in Sources */,
 				F6B4E8562AA9996D00620334 /* PeriodSettingView.swift in Sources */,
 				F65692E32ABD32DE00A8AA95 /* CalendarManager.swift in Sources */,
 			);

@@ -81,9 +81,16 @@ struct ScheduleView: View {
     @State var isShowReminder = false
     @State var event: EKEvent? = nil
     @State var reminder: EKReminder? = nil
+    var showingDayString: String {
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "ja_JP")
+        df.dateFormat = "yyyy/MM/dd"
+        return df.string(from: date)
+    }
     
     var body: some View {
-        Text("\(date)")
+        Text(showingDayString)
+            .padding()
         ScrollView {
             ForEach(createScheduleArray(date: date, timetableArray: timetableData.timetableArray, eventArray: calendarManager.dayEvents ?? [], reminderArray: calendarManager.dayReminders ?? []), id: \.self) { comp in
                 if comp.comptype == .subject {

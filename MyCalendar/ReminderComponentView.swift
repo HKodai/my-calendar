@@ -13,16 +13,18 @@ struct ReminderComponentView: View {
     var body: some View {
         ZStack {
             let rgb = rgbDecode(code: component.colorCode!)
+            let color = Color(red: rgb[0], green: rgb[1], blue: rgb[2])
             RoundedRectangle(cornerRadius: 10)
-                .stroke(Color(red: rgb[0], green: rgb[1], blue: rgb[2]), lineWidth: 2)
-                .frame(height: 75)
-                .padding()
+                .stroke(color, lineWidth: 2)
             VStack {
                 if let time = component.startDate {
                     Text(timeFormat(comps: calendar.dateComponents([.hour, .minute], from: time)))
                 }
                 Text("\(component.title)")
             }
+            .foregroundStyle(color)
         }
+        .frame(height: 75)
+        .padding([.top, .leading, .trailing])
     }
 }
