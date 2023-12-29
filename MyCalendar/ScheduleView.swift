@@ -67,7 +67,7 @@ func createScheduleArray(date: Date, timetableArray: [Timetable], eventArray: [E
     // リマインダー
     for reminder in reminderArray {
         let colorCode = UserDefaults.standard.string(forKey: reminder.calendarItemIdentifier) ?? "000000"
-        arr.append(ScheduleComponent(id: reminder.calendarItemIdentifier, title: reminder.title, comptype: .reminder, startDate: reminder.completionDate, endDate: nil, colorCode: colorCode))
+        arr.append(ScheduleComponent(id: reminder.calendarItemIdentifier, title: reminder.title, comptype: .reminder, startDate: reminder.dueDateComponents?.date, endDate: nil, colorCode: colorCode))
     }
     return arr
 }
@@ -90,14 +90,14 @@ struct ScheduleView: View {
                     Button(action: {
                         isShowTimeteble.toggle()
                     }, label: {
-                        SubjectComponentView(component: comp)
+                        SubjectEventComponentView(component: comp)
                     })
                 } else if comp.comptype == .event {
                     Button(action: {
                         event = calendarManager.store.event(withIdentifier: comp.id!)
                         isShowEvent.toggle()
                     }, label: {
-                        Text("\(comp.title)")
+                        SubjectEventComponentView(component: comp)
                     })
                     
                 } else if comp.comptype == .reminder {
@@ -115,7 +115,7 @@ struct ScheduleView: View {
                             }
                         }
                     }, label: {
-                        Text("\(comp.title)")
+                        ReminderComponentView(component: comp)
                     })
                 }
             }

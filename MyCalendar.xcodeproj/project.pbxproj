@@ -18,6 +18,7 @@
 		F6670C162A95CF9F005E6399 /* SubjectSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C152A95CF9F005E6399 /* SubjectSettingView.swift */; };
 		F6670C182A98708D005E6399 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C172A98708D005E6399 /* CalendarView.swift */; };
 		F6670C1A2A9870CA005E6399 /* ReminderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6670C192A9870CA005E6399 /* ReminderView.swift */; };
+		F6735BB62B3E645000042703 /* ReminderComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6735BB52B3E645000042703 /* ReminderComponentView.swift */; };
 		F67533B02B15801600B65F5E /* CreateEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67533AF2B15801600B65F5E /* CreateEventView.swift */; };
 		F67533B22B16DDAA00B65F5E /* ColorSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67533B12B16DDAA00B65F5E /* ColorSelectView.swift */; };
 		F6B4E8562AA9996D00620334 /* PeriodSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B4E8552AA9996D00620334 /* PeriodSettingView.swift */; };
@@ -42,6 +43,7 @@
 		F6670C152A95CF9F005E6399 /* SubjectSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectSettingView.swift; sourceTree = "<group>"; };
 		F6670C172A98708D005E6399 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		F6670C192A9870CA005E6399 /* ReminderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderView.swift; sourceTree = "<group>"; };
+		F6735BB52B3E645000042703 /* ReminderComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderComponentView.swift; sourceTree = "<group>"; };
 		F67533AE2B14911E00B65F5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F67533AF2B15801600B65F5E /* CreateEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEventView.swift; sourceTree = SOURCE_ROOT; };
 		F67533B12B16DDAA00B65F5E /* ColorSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectView.swift; sourceTree = SOURCE_ROOT; };
@@ -88,6 +90,7 @@
 				F67533AF2B15801600B65F5E /* CreateEventView.swift */,
 				F6E165572B2E7F7A003B9173 /* ScheduleView.swift */,
 				F6E165592B2EF0C5003B9173 /* SubjectComponentView.swift */,
+				F6735BB52B3E645000042703 /* ReminderComponentView.swift */,
 				F67533AE2B14911E00B65F5E /* Info.plist */,
 				F65692E22ABD32DE00A8AA95 /* CalendarManager.swift */,
 				F65DE6F22AC3038000287218 /* CreateReminderView.swift */,
@@ -145,7 +148,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1510;
 				TargetAttributes = {
 					F6670BFF2A943C8A005E6399 = {
 						CreatedOnToolsVersion = 14.3.1;
@@ -201,6 +204,7 @@
 				F67533B22B16DDAA00B65F5E /* ColorSelectView.swift in Sources */,
 				F6670C142A9500E0005E6399 /* SubjectView.swift in Sources */,
 				F6B4E8622AAC137900620334 /* TimetableSelectView.swift in Sources */,
+				F6735BB62B3E645000042703 /* ReminderComponentView.swift in Sources */,
 				F67533B02B15801600B65F5E /* CreateEventView.swift in Sources */,
 				F6E1655A2B2EF0C5003B9173 /* SubjectComponentView.swift in Sources */,
 				F6B4E8562AA9996D00620334 /* PeriodSettingView.swift in Sources */,
@@ -215,6 +219,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -276,6 +281,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";

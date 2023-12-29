@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SubjectComponentView: View {
+struct SubjectEventComponentView: View {
     let component: ScheduleComponent
     
     var body: some View {
