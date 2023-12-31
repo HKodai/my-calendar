@@ -18,7 +18,7 @@ struct ScheduleComponent: Hashable {
     let id: String?
     let title: String
     let comptype: ScheduleCompType
-    let startDate: Date?
+    let startDate: Date
     let endDate: Date?
     let colorCode: String?
 }
@@ -36,7 +36,7 @@ func createScheduleArray(date: Date, timetableArray: [Timetable], eventArray: [E
                     let endTime = timetable.periods[period].endTime
                     if let subject = timetable.table[weekday][period] {
                         if !subject.noClass.contains(date) {
-                            var startDate: Date? = nil
+                            var startDate = Date()
                             var endDate: Date? = nil
                             var startDateComps = calendar.dateComponents([.year, .month, .day], from: date)
                             var endDateComps = calendar.dateComponents([.year, .month, .day], from: date)
@@ -44,14 +44,14 @@ func createScheduleArray(date: Date, timetableArray: [Timetable], eventArray: [E
                                let startMinute = startTime.minute {
                                 startDateComps.hour = startHour
                                 startDateComps.minute = startMinute
-                                startDate = calendar.date(from: startDateComps)
                             }
+                            startDate = calendar.date(from: startDateComps)!
                             if let endHour = endTime.hour,
                                let endMinute = endTime.minute {
                                 endDateComps.hour = endHour
                                 endDateComps.minute = endMinute
-                                endDate = calendar.date(from: endDateComps)
                             }
+                            endDate = calendar.date(from: endDateComps)
                             arr.append(ScheduleComponent(id: nil, title: subject.title, comptype: .subject, startDate: startDate, endDate: endDate, colorCode: subject.colorCode))
                         }
                     }
@@ -67,8 +67,19 @@ func createScheduleArray(date: Date, timetableArray: [Timetable], eventArray: [E
     // リマインダー
     for reminder in reminderArray {
         let colorCode = UserDefaults.standard.string(forKey: reminder.calendarItemIdentifier) ?? "000000"
-        arr.append(ScheduleComponent(id: reminder.calendarItemIdentifier, title: reminder.title, comptype: .reminder, startDate: reminder.dueDateComponents?.date, endDate: nil, colorCode: colorCode))
+        arr.append(ScheduleComponent(id: reminder.calendarItemIdentifier, title: reminder.title, comptype: .reminder, startDate: reminder.dueDateComponents!.date!, endDate: nil, colorCode: colorCode))
     }
+    arr.sort(by: { a, b -> Bool in
+        if a.startDate != b.startDate {
+            return a.startDate <= b.startDate
+        }
+        if a.endDate == nil {
+            return true
+        } else if b.endDate == nil {
+            return false
+        }
+        return a.endDate! <= b.endDate!
+    })
     return arr
 }
 

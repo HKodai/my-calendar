@@ -17,9 +17,8 @@ struct ReminderComponentView: View {
             RoundedRectangle(cornerRadius: 10)
                 .stroke(color, lineWidth: 2)
             VStack {
-                if let time = component.startDate {
-                    Text(timeFormat(comps: calendar.dateComponents([.hour, .minute], from: time)))
-                }
+                let time = component.startDate
+                Text(timeFormat(comps: calendar.dateComponents([.hour, .minute], from: time)))
                 Text("\(component.title)")
             }
             .foregroundStyle(color)

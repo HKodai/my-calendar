@@ -19,10 +19,9 @@ struct SubjectEventComponentView: View {
                 .stroke(Color.black, lineWidth: 2)
             VStack {
                 HStack {
-                    if let start = component.startDate {
-                        Text(timeFormat(comps: calendar.dateComponents([.hour, .minute], from: start)))
-                    }
-                    if component.startDate != nil || component.endDate != nil {
+                    let start = component.startDate
+                    Text(timeFormat(comps: calendar.dateComponents([.hour, .minute], from: start)))
+                    if component.endDate != nil {
                         Text("~")
                     }
                     if let end = component.endDate {
