@@ -41,7 +41,7 @@ struct CreateEventView: View {
                             isError.toggle()
                         } else {
                             if let event {
-                                calendarManager.modifyEvent(event: event, title: title, startDate: start, endDate: end)
+                                calendarManager.modifyEvent(event: event, title: title, startDate: start, endDate: end, colorCode: colorCode)
                             } else {
                                 calendarManager.createEvent(title: title, startDate: start, endDate: end, colorCode: colorCode)
                             }
