@@ -118,17 +118,9 @@ struct CalendarView: View {
                                     GridRow {
                                         ForEach(0..<7) {weekday in
                                             let index = week*7+weekday
-                                            let cellDate = calendarManager.calendarDates[index]
-                                            // 今日なら枠線を青くする
-                                            if cellDate.date != nil && calendar.isDate(cellDate.date!, inSameDayAs: Date()) {
-                                                CalendarCellView(cellDate: calendarManager.calendarDates[index])
-                                                    .frame(width: cellWidth, height: height)
-                                                    .border(.blue, width: 3)
-                                            } else {
-                                                CalendarCellView(cellDate: calendarManager.calendarDates[index])
-                                                    .frame(width: cellWidth, height: height)
-                                                    .border(.black)
-                                            }
+                                            CalendarCellView(cellDate: calendarManager.calendarDates[index])
+                                                .frame(width: cellWidth, height: height)
+                                                .border(.black)
                                         }
                                     }
                                 }
@@ -198,9 +190,11 @@ struct CalendarView: View {
                                     GridRow {
                                         ForEach(0..<7) {weekday in
                                             let index = week*7+weekday
+                                            let cellDate = calendarManager.calendarDates[index]
+                                            let isToday = cellDate.date != nil && calendar.isDate(cellDate.date!, inSameDayAs: Date())
                                             Button(action: {
-                                                if let cellDate = calendarManager.calendarDates[index].date {
-                                                    calendarManager.showingDate = cellDate
+                                                if cellDate.date != nil {
+                                                    calendarManager.showingDate = cellDate.date!
                                                     calendarManager.fetchDayEvent()
                                                     calendarManager.fetchDayReminder()
                                                     isShowScheduleView.toggle()
@@ -208,7 +202,8 @@ struct CalendarView: View {
                                             }) {
                                                 Color.clear
                                             }
-                                            .frame(width: cellWidth, height: height)
+                                            .frame(width: isToday ? cellWidth+3: cellWidth, height: height)
+                                            .border(isToday ? .blue : .clear, width: isToday ? 3 : 0)
                                             .sheet(isPresented: $isShowScheduleView, onDismiss: {
                                                 calendarManager.createCalendarDates()
                                             }, content: {
