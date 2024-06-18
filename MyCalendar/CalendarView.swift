@@ -209,7 +209,9 @@ struct CalendarView: View {
                                                 Color.clear
                                             }
                                             .frame(width: cellWidth, height: height)
-                                            .sheet(isPresented: $isShowScheduleView, content: {
+                                            .sheet(isPresented: $isShowScheduleView, onDismiss: {
+                                                calendarManager.createCalendarDates()
+                                            }, content: {
                                                 ScheduleView(date: $calendarManager.showingDate)
                                             })
                                         }
